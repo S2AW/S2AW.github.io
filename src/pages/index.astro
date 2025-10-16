@@ -199,6 +199,18 @@ const LATEST_THOUGHTS = {
         background: #f3f4f6;
       }
       .desc { color: #4b5563; font-size: .9rem; }
+      /* Fix mobile overlap: make the sidebar non-sticky and auto-height */
+      @media (max-width: 959px) {
+        aside {
+          border-right: none;
+          border-bottom: 1px solid var(--border); /* nice divider instead */
+        }
+        .aside-inner {
+          position: static;   /* was: sticky */
+          height: auto;       /* was: 100dvh */
+          padding: 16px;      /* a bit tighter on phones */
+        }
+      }
     </style>
   </head>
 
