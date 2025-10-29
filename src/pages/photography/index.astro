@@ -1,10 +1,167 @@
-<nav style="padding:1rem 0; border-bottom:1px solid #e5e7eb;">
-  <a href="/" style="font-weight:700; margin-right:0.75rem;">Stephen</a>
-  <a href="/projects/" style="margin-right:0.75rem;">Projects</a>
-  <a href="/photography/" style="margin-right:0.75rem;">Photography</a>
-</nav>
+---
+/*
+  Photography — matches Travel page styling (sidebar, Playfair/Inter, light theme).
+  • Top: camera gear card
+  • Below: albums grid
+*/
+const SITE_TITLE = "Stephen — Photography";
+const SITE_DESCRIPTION = "Camera gear, plus albums I add to over time.";
 
-<main style="max-width:780px; margin:2rem auto; padding:0 1rem;">
-  <h1>Photography</h1>
-  <p>Curated sets coming soon. I’ll group photos by theme and add brief notes on gear and process.</p>
-</main>
+const NAV = [
+  { label: "Home", href: "/" },
+  { label: "About", href: "/about/" },
+  { label: "Education", href: "/education/" },
+  { label: "Experience", href: "/experience/" },
+  { label: "Projects", href: "/projects/" },
+  { label: "Photography", href: "/photography/", active: true },
+  { label: "Travel", href: "/travel/" },
+  { label: "Thoughts", href: "/thoughts/" },
+  { label: "Contact", href: "mailto:stephen@example.com" },
+];
+---
+
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{SITE_TITLE}</title>
+    <meta name="description" content={SITE_DESCRIPTION} />
+    <link rel="icon" href="/favicon.ico" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet" />
+    <style>
+      :root { --bg:#fff; --sidebar:#f3f5f8; --text:#0f141b; --muted:#6b7280; --accent:#0a67ff; --border:#e5e7eb; --maxw:1400px; --sidebar-w:270px; }
+      *{box-sizing:border-box}
+      html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font:16px/1.6 Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;}
+      img{max-width:100%;display:block}
+      a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+
+      .site{display:grid;grid-template-columns:1fr;min-height:100dvh}
+      @media(min-width:800px){.site{grid-template-columns:var(--sidebar-w) 1fr}}
+
+      aside{background:var(--sidebar);border-right:1px solid var(--border)}
+      .aside-inner{position:sticky;top:0;height:100dvh;display:grid;grid-template-rows:auto 1fr auto;padding:28px 22px;gap:18px;max-width:var(--sidebar-w);margin:0 auto}
+      .avatar{width:160px;height:160px;border-radius:999px;overflow:hidden;border:2px solid #fff;box-shadow:0 6px 22px rgba(0,0,0,.06);margin:0 auto}
+      .avatar img{width:100%;height:100%;object-fit:cover;object-position:50% 35%}
+      .who{text-align:center;margin-top:8px}
+      .name{font:700 1.35rem/1.2 "Playfair Display",Georgia,serif;color:#111827}
+      .role{font-size:.9rem;color:var(--accent)} .loc{color:var(--muted);font-size:.85rem}
+      .sidenav{list-style:none;margin:18px 0;padding:0;display:grid;gap:10px}
+      .sidenav a{color:#0f141b;font-weight:600}.sidenav a.active,.sidenav a:hover{color:var(--accent)}
+      .copyright{color:var(--muted);font-size:.8rem}
+
+      main{display:grid;align-content:start}
+      .content{max-width: var(--maxw);margin-left: 0;margin-right: auto; padding: clamp(12px, 2vw, 28px); padding-left: clamp(12px, 2vw, 28px);}
+      .headline{font-family:"Playfair Display",Georgia,serif;font-size:clamp(2.6rem,5vw,3.8rem);line-height:1.08;margin:8px 0 0}
+      .subtext{color:#374151;max-width:65ch;margin:8px 0 22px;font-size:1.05rem}
+
+      h2.section-title{font-family:"Playfair Display",Georgia,serif;font-size:1.8rem;margin:2rem 0 1rem;color:#111827}
+      .grid{display:grid;gap:18px;grid-template-columns:repeat(1,1fr)}
+      @media(min-width:720px){.grid{grid-template-columns:repeat(3,1fr)}}
+      @media(min-width:1100px){.grid{grid-template-columns:repeat(5,1fr)}}
+      .card{border:2px solid #111827;border-radius:14px;overflow:hidden;background:#fff}
+      .cover{aspect-ratio:16/10;width:100%;object-fit:cover;background:#f3f4f6}
+      .body{padding:10px}
+      .title{font-weight:700;color:#111827}
+      .subtitle{color:#6b7280;font-size:.9rem}
+
+      .gear-card{border:2px solid #111827;border-radius:14px;background:#fff;overflow:hidden}
+      .gear-head{padding:14px;border-bottom:1px solid var(--border)}
+      .gear-title{margin:0;font-family:"Playfair Display",Georgia,serif;font-size:1.4rem}
+      .gear-body{padding:12px}
+      .gear-grid{display:grid;gap:12px;grid-template-columns:repeat(1,1fr)}
+      @media(min-width:800px){.gear-grid{grid-template-columns:repeat(3,1fr)}}
+      .gear-item{border:1px dashed #cbd5e1;border-radius:10px;padding:10px}
+      .gear-item b{display:block;margin-bottom:6px}
+
+      @media(max-width:959px){aside{border-right:none;border-bottom:1px solid var(--border)}.aside-inner{position:static;height:auto;padding:16px}}
+    </style>
+  </head>
+  <body>
+    <div class="site">
+      <aside>
+        <div class="aside-inner">
+          <div>
+            <div class="avatar"><img src="/images/home/portrait.jpg" alt="Stephen portrait" /></div>
+            <div class="who">
+              <div class="name">Stephen</div>
+              <a class="role" href="/">Strategist &amp; Aspiring Autodidact</a>
+              <div class="loc">Netherlands / United States</div>
+            </div>
+          </div>
+
+          <nav>
+            <ul class="sidenav">
+              {NAV.map(n => (
+                <li><a class={n.active ? 'active' : ''} href={n.href}>{n.label}</a></li>
+              ))}
+            </ul>
+          </nav>
+
+          <div class="copyright">© {new Date().getFullYear()} Stephen · <a href="https://github.com/S2AW" target="_blank" rel="noopener">GitHub</a></div>
+        </div>
+      </aside>
+
+      <main>
+        <div class="content">
+          <h1 class="headline">Photography</h1>
+          <p class="subtext">Camera gear, plus albums I add to over time.</p>
+
+          <section class="gear-card">
+            <div class="gear-head"><h2 class="gear-title">Camera Gear</h2></div>
+            <div class="gear-body">
+              <div class="gear-grid">
+                <div class="gear-item">
+                  <b>Camera Bodies</b>
+                  <div>Sony α7 IV</div>
+                  <div>Canon EOS R10</div>
+                </div>
+                <div class="gear-item">
+                  <b>Lenses</b>
+                  <div>Sony 70–200mm f/2.8 GM II</div>
+                  <div>Sony 24–70mm f/2.8 GM</div>
+                  <div>Sigma 150–600mm f/5–6.3</div>
+                </div>
+                <div class="gear-item">
+                  <b>Accessories</b>
+                  <div>Peak Design Travel Tripod (Carbon)</div>
+                  <div>Røde VideoMic NTG</div>
+                  <div>DJI Mic 2</div>
+                </div>
+                <div class="gear-item">
+                  <b>Software</b>
+                  <div>Lightroom Classic</div>
+                  <div>Topaz Photo AI</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <h2 class="section-title">Albums</h2>
+          <div class="grid">
+            <article class="card">
+              <a href="/photography/wildlife"><img class="cover" src="/images/photography/albums/wildlife/cover.jpg" alt="Wildlife cover" /></a>
+              <div class="body">
+                <div class="title">Wildlife</div>
+                <div class="subtitle">Birds, mammals, and fleeting moments.</div>
+              </div>
+            </article>
+            <article class="card">
+              <a href="/photography/natural-scenery"><img class="cover" src="/images/photography/albums/natural-scenery/cover.jpg" alt="Natural scenery cover" /></a>
+              <div class="body">
+                <div class="title">Natural Scenery</div>
+                <div class="subtitle">Landscapes, coastlines, and skies.</div>
+              </div>
+            </article>
+            <article class="card">
+              <a href="/photography/dogs"><img class="cover" src="/images/photography/albums/dogs/cover.jpg" alt="Dogs cover" /></a>
+              <div class="body">
+                <div class="title">Dogs</div>
+                <div class="subtitle">Good pups doing their thing.</div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

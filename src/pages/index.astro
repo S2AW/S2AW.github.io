@@ -6,11 +6,11 @@
 const CONTACT_EMAIL = "stephen@example.com";
 const GITHUB_USERNAME = "stephen-github";
 
-const SITE_TITLE = "Stephen — Designer/Developer";
+const SITE_TITLE = "Stephen";
 const SITE_DESCRIPTION = "Portfolio with a left sidebar profile and clean, editorial hero.";
 
 const HERO_HEADING_LINE1 = "I am...";
-const HERO_HEADING_LINE2 = "busy with unepmloyment";
+const HERO_HEADING_LINE2 = "busy with unemployment";
 const HERO_SUBTEXT = `Showcasing my projects and activities while looking for a job!`;
 
 const HERO_IMAGES: string[] = [
@@ -110,13 +110,8 @@ const LATEST_THOUGHTS = {
       .copyright { color: var(--muted); font-size: .8rem; }
 
       /* Main */
-      main { display: grid; align-content: center; }
-      .content {
-        max-width: var(--maxw);
-        margin: 0 auto;
-        padding: clamp(12px, 2vw, 28px);
-        padding-left: clamp(4px, 1vw, 16px);
-      }
+      main { display: grid; align-content: start; }
+      .content{max-width: var(--maxw);margin-left: 0;margin-right: auto; padding: clamp(12px, 2vw, 28px); padding-left: clamp(12px, 2vw, 28px);}
 
       .hero { display: grid; gap: 20px; align-items: start; }
       @media (min-width: 1024px) { .hero { grid-template-columns: 1fr 1fr; gap: 24px; } }
@@ -237,7 +232,7 @@ const LATEST_THOUGHTS = {
           <nav>
             <ul class="sidenav">
               <li><a class="active" href="/">Home</a></li>
-              <li><a href="#about">About</a></li>
+              <li><a href="/about/">About</a></li>
               <li><a href="/education/">Education</a></li>
               <li><a href="/experience/">Experience</a></li>
               <li><a href="/projects/">Projects</a></li>
@@ -329,7 +324,7 @@ const LATEST_THOUGHTS = {
       }
 
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      function start() { if (!reduce) { stop(); timer = setInterval(() => show(i + 1), 10000); } }
+      function start() { if (!reduce) { stop(); timer = setInterval(() => show(i + 1), 8000); } }
       function stop() { if (timer) { clearInterval(timer); timer = null; } }
 
       prev?.addEventListener('click', () => { show(i - 1); start(); });

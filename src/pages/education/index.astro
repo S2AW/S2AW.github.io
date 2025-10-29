@@ -1,0 +1,268 @@
+---
+/*
+  src/pages/education.astro
+  Education timeline — LinkedIn-style layout
+  • Logo on the left, text on the right
+  • Field order: Years → School → Location → Degree → Notes → Links
+*/
+
+const SITE_TITLE = "Stephen — Education";
+const SITE_DESCRIPTION = "Degrees, programs, and academic focus areas.";
+
+type Edu = {
+  years: string;
+  school: string;
+  location?: string;
+  degree?: string;
+  notes?: string[];
+  links?: { label: string; href: string }[];
+  logo?: string;      // /images/education/logos/*.jpg
+  logoAlt?: string;
+};
+
+const EDUCATION: Edu[] = [
+  {
+    years: "2024–2025",
+    school: "Vrije Universiteit Amsterdam (VU Amsterdam)",
+    location: "Amsterdam, Netherlands",
+    degree: "MSc — Spatial, Transport & Environmental Economics",
+    notes: [
+      "Focus on network analysis, econometrics, and ML for spatial/economic data",
+      "Tracks: Transport & Network Economics; Environmental Economics"
+    ],
+    links: [
+      { label: "Program overview", href: "https://vu.nl/en/education/master/spatial-and-applied-economics" },
+      { label: "Transport & Network Economics", href: "https://vu.nl/en/education/master/transport-and-network-economics" },
+      { label: "Environmental Economics", href: "https://vu.nl/en/education/master/environmental-economics" }
+    ],
+    logo: "/images/education/logos/vu.jpg",
+    logoAlt: "Vrije Universiteit Amsterdam logo"
+  },
+  {
+    years: "2014–2018",
+    school: "Penn State University",
+    location: "State College, PA, USA",
+    degree: "B.S. — Geosciences",
+    notes: [
+      "Senior thesis with independent research",
+      "Broad foundation in physical & natural sciences; resources, environment, hazards"
+    ],
+    links: [
+      { label: "Geosciences B.S.", href: "https://bulletins.psu.edu/undergraduate/colleges/earth-mineral-sciences/geosciences-bs/" }
+    ],
+    logo: "/images/education/logos/psu.jpg",
+    logoAlt: "Penn State University logo"
+  },
+  {
+    years: "2010–2014",
+    school: "Upper Dublin High School",
+    location: "Fort Washington, PA, USA",
+    degree: "High School Diploma",
+    links: [
+      { label: "About Upper Dublin HS", href: "https://www.udsd.org/o/udhs" }
+    ],
+    logo: "/images/education/logos/udhs.jpg",
+    logoAlt: "Upper Dublin High School logo"
+  }
+];
+---
+
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{SITE_TITLE}</title>
+    <meta name="description" content={SITE_DESCRIPTION} />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="icon" href="/favicon.ico" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+      :root {
+        --bg:#fff; --sidebar:#f3f5f8; --text:#0f141b; --muted:#6b7280; --accent:#0a67ff;
+        --border:#e5e7eb; --maxw:1400px; --sidebar-w:270px;
+        --card-border:#111827;
+      }
+      * { box-sizing: border-box; }
+      html, body {
+        margin: 0; padding: 0; background: var(--bg); color: var(--text);
+        font: 16px/1.6 Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      }
+      a { color: var(--accent); text-decoration: none; }
+      a:hover { text-decoration: underline; }
+
+      .site { display: grid; grid-template-columns: 1fr; min-height: 100dvh; }
+      @media (min-width: 800px) { .site { grid-template-columns: var(--sidebar-w) 1fr; } }
+
+      /* Sidebar */
+      aside { background: var(--sidebar); border-right: 1px solid var(--border); }
+      .aside-inner {
+        position: sticky; top: 0; height: 100dvh;
+        display: grid; grid-template-rows: auto 1fr auto;
+        padding: 28px 22px; gap: 18px; max-width: var(--sidebar-w); margin: 0 auto;
+      }
+      .avatar { width: 160px; height: 160px; border-radius: 999px; overflow: hidden; border: 2px solid #fff;
+        box-shadow: 0 6px 22px rgba(0,0,0,.06); margin: 0 auto; }
+      .avatar img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 35%; }
+      .who { text-align: center; margin-top: 8px; }
+      .name { font: 700 1.35rem/1.2 "Playfair Display", Georgia, serif; color: #111827; }
+      .role { font-size: .9rem; color: var(--accent); }
+      .loc { color: var(--muted); font-size: .85rem; }
+
+      .sidenav { list-style: none; margin: 18px 0; padding: 0; display: grid; gap: 10px; }
+      .sidenav a { color: #0f141b; font-weight: 600; }
+      .sidenav a.active, .sidenav a:hover { color: var(--accent); }
+
+      .copyright { color: var(--muted); font-size: .8rem; }
+
+      /* Main */
+      main { display: grid; align-content: start; }
+      .content { max-width: var(--maxw); margin-left: 0; margin-right: auto; padding: clamp(12px, 2vw, 28px); padding-left: clamp(12px, 2vw, 28px); }
+
+      .headline {
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: clamp(2.2rem, 5vw, 3.2rem);
+        line-height: 1.08; margin: 8px 0 0; color: #111827;
+      }
+      .subtext { color: #374151; max-width: 65ch; margin: 8px 0 22px; font-size: 1.05rem; }
+
+      /* Timeline */
+      .timeline { position: relative; margin-top: 8px; }
+      .timeline::before {
+        content: ""; position: absolute; left: 12px; top: 0; bottom: 0;
+        width: 2px; background: var(--border);
+      }
+
+      .edu { display: grid; gap: 14px; }
+      .edu-item { position: relative; padding-left: 44px; }
+      .dot {
+        position: absolute; left: 4px; top: 28px; width: 16px; height: 16px; border-radius: 999px;
+        background: #fff; border: 2px solid var(--accent); outline: 2px solid #fff;
+      }
+
+      .card {
+        border: 2px solid var(--card-border); border-radius: 14px; background: #fff;
+        padding: 14px 16px;
+        display: grid;
+        grid-template-columns: auto 1fr;   /* logo | text */
+        gap: 14px;
+        align-items: start;
+      }
+
+      /* Left logo */
+      .logo-wrap {
+        width: 88px; height: 88px;         /* prominent, but balanced */
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        background: #fff;
+        display: grid; place-items: center;
+        flex-shrink: 0;
+        box-shadow: 0 4px 14px rgba(0,0,0,.05);
+      }
+      .logo { width: 88%; height: 88%; object-fit: contain; image-rendering: -webkit-optimize-contrast; }
+
+      /* Text column — order enforced here to match your request */
+      .text-col { display: grid; gap: 4px; }
+      .years { font-weight: 700; letter-spacing: .02em; }
+      .school { font-weight: 700; color: #111827; }
+      .meta { color: #6b7280; font-size: .95rem; }           /* Location line */
+      .degree { font-weight: 600; margin-top: 2px; }
+      .notes { margin: 6px 0 0; padding-left: 18px; color: #374151; }
+      .links { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 8px; }
+      .chip {
+        display: inline-block; border: 1px solid var(--border); padding: 6px 10px; border-radius: 999px;
+        font-size: .9rem; background: #fff; text-decoration: none;
+      }
+      .chip:hover { background: #f9fafb; text-decoration: none; }
+
+      /* Mobile tweaks (match Home/Travel) */
+      @media (max-width: 959px) {
+        aside { border-right: none; border-bottom: 1px solid var(--border); }
+        .aside-inner { position: static; height: auto; padding: 16px; }
+      }
+      @media (max-width: 640px) {
+        .logo-wrap { width: 72px; height: 72px; }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="site">
+      <!-- Sidebar -->
+      <aside>
+        <div class="aside-inner">
+          <div>
+            <div class="avatar"><img src="/images/home/portrait.jpg" alt="Stephen portrait" /></div>
+            <div class="who">
+              <div class="name">Stephen</div>
+              <a class="role" href="/">Strategist &amp; Aspiring Autodidact</a>
+              <div class="loc">Netherlands / United States</div>
+            </div>
+          </div>
+
+          <nav>
+            <ul class="sidenav">
+              <li><a href="/">Home</a></li>
+              <li><a href="/about/">About</a></li>
+              <li><a class="active" href="/education/">Education</a></li>
+              <li><a href="/experience/">Experience</a></li>
+              <li><a href="/projects/">Projects</a></li>
+              <li><a href="/photography/">Photography</a></li>
+              <li><a href="/travel/">Travel</a></li>
+              <li><a href="/thoughts/">Thoughts</a></li>
+              <li><a href="mailto:stephen@example.com">Contact</a></li>
+            </ul>
+          </nav>
+
+          <div class="copyright">© {new Date().getFullYear()} Stephen · <a href="https://github.com/S2AW" target="_blank" rel="noopener">GitHub</a></div>
+        </div>
+      </aside>
+
+      <!-- Main -->
+      <main>
+        <div class="content">
+          <h1 class="headline">Education</h1>
+          <p class="subtext">MSc Economics | BSc Geosciences</p>
+
+          <section class="timeline">
+            <div class="edu">
+              {EDUCATION.map((e) => (
+                <article class="edu-item">
+                  <div class="dot" aria-hidden="true"></div>
+
+                  <div class="card">
+                    {e.logo && (
+                      <div class="logo-wrap">
+                        <img class="logo" src={e.logo} alt={e.logoAlt ?? `${e.school} logo`} width="88" height="88" loading="lazy" />
+                      </div>
+                    )}
+
+                    <div class="text-col">
+                      <div class="years">{e.years}</div>
+                      <div class="school">{e.school}</div>
+                      {e.location && <div class="meta">{e.location}</div>}
+                      {e.degree && <div class="degree">{e.degree}</div>}
+
+                      {e.notes && e.notes.length > 0 && (
+                        <ul class="notes">
+                          {e.notes.map((n) => <li>{n}</li>)}
+                        </ul>
+                      )}
+
+                      {e.links && e.links.length > 0 && (
+                        <div class="links">
+                          {e.links.map((l) => <a class="chip" href={l.href} target="_blank" rel="noopener">{l.label}</a>)}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

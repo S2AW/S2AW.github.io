@@ -1,0 +1,425 @@
+---
+/*
+  src/pages/experience.astro
+  Experience — single header per company with stacked engagement sections (like LinkedIn)
+  • Deloitte: one header (years + title + company/location) → multiple segments with intros + bullets + chips
+  • Other jobs: standard single cards
+*/
+
+const SITE_TITLE = "Stephen — Experience";
+const SITE_DESCRIPTION = "Professional roles, responsibilities, and impact.";
+
+type Link = { label: string; href: string };
+
+type Segment = {
+  intro?: string;       // short paragraph above bullets
+  bullets?: string[];   // bullet points for this engagement
+  links?: Link[];       // chips under this engagement
+};
+
+type CompanyWithSegments = {
+  // Shared header row
+  years: string;
+  title: string;
+  company: string;
+  companyUrl?: string;
+  location?: string;
+  logo?: string;
+  logoAlt?: string;
+
+  // Engagement blocks
+  segments: Segment[];
+};
+
+type SingleJob = {
+  years: string;
+  title: string;
+  company: string;
+  companyUrl?: string;
+  location?: string;
+  bullets?: string[];
+  links?: Link[];
+  logo?: string;
+  logoAlt?: string;
+};
+
+type ExperienceEntry = CompanyWithSegments | SingleJob;
+
+const isSegmented = (e: ExperienceEntry): e is CompanyWithSegments =>
+  Array.isArray((e as any).segments);
+
+const EXPERIENCE: ExperienceEntry[] = [
+  // Deloitte — one header, two engagement sections
+  {
+    years: "Mar 2022 – Jul 2024",
+    title: "Strategy & Analytics Consultant",
+    company: "Deloitte",
+    companyUrl: "https://www.deloitte.com/na/en.html",
+    location: "Washington, D.C., USA",
+    logo: "/images/experience/logos/deloitte.jpeg",
+    logoAlt: "Deloitte logo",
+    segments: [
+      {
+        intro:
+          "Economic Geologist:",
+        bullets: [
+          "Contracted by the U.S. Department of State’s Bureau of Energy Resources to support Energy Governance and Capacity Initiative Engagement, and the Energy and Mineral Governance Program — Global Mining, Greenland.",
+          "Coordinated multi-stakeholder work for the Minerals Security Partnership; produced executive-ready reports and presentations.",
+          "Led research, brief writing, and technical writing for senior leadership."
+        ],
+        links: [
+          { label: "Minerals Security Partnership", href: "https://www.state.gov/minerals-security-partnership" }
+        ]
+      },
+      {
+        intro:
+          "Financial Analyst:",
+        bullets: [
+          "Contracted by the U.S. Coast Guard’s National Pollution Funds Center (NPFC) to enhance financial management, financial reporting, and internal controls used to manage the Oil Spill Liability Trust Fund.",
+          "Built SharePoint/PowerApps workflows and delivered Power BI/Tableau dashboards for leadership."
+        ],
+        links: [
+          { label: "National Pollution Funds Center", href: "https://www.uscg.mil/Mariners/National-Pollution-Funds-Center/" }
+        ]
+      }
+    ]
+  },
+
+  // Standard single-card entries
+  {
+    years: "Feb 2019 – Feb 2022",
+    title: "Data Analyst",
+    company: "IMG-Crown",
+    companyUrl: "https://www.imgcrown.com/",
+    location: "Washington, D.C., USA",
+    bullets: [
+      "Coordinated with U.S. oil & gas operators and DOE analysts to ensure timely submissions for national energy publications (e.g., Monthly Oil & Gas Production Report, Natural Gas Annual).",
+      "Led communication workflows and scheduling across teams to meet publication deadlines.",
+      "Maintained, reconciled, and validated large datasets; presented findings to senior EIA officials.",
+      "Proactively improved processes to enhance coordination and data reliability."
+    ],
+    links: [
+      { label: "EIA — Natural Gas Annual", href: "https://www.eia.gov/naturalgas/annual/" },
+      { label: "Monthly Crude Oil and Natural Gas Production", href: "https://www.eia.gov/petroleum/production/" }
+    ],
+    logo: "/images/experience/logos/img.jpeg",
+    logoAlt: "IMG-Crown logo"
+  },
+  {
+    years: "Aug 2018 – Jan 2019",
+    title: "Wellsite Geologist",
+    company: "Columbine Logging",
+    companyUrl: "https://www.columbinelogging.com/",
+    location: "Denver, Colorado, USA",
+    bullets: [
+      "Operated independently on drilling sites (12-hour shifts); ensured accurate communication between field teams and project managers.",
+      "Prepared detailed documentation and reports under time pressure with consistent QA.",
+      "Demonstrated flexibility and problem-solving in remote, fast-paced environments."
+    ],
+    links: [
+      { label: "Powder River Basin overview", href: "https://www.usgs.gov/centers/energy-resources-program/science/powder-river-basin" }
+    ],
+    logo: "/images/experience/logos/columbine.jpeg",
+    logoAlt: "Columbine Logging logo"
+  }
+];
+---
+
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{SITE_TITLE}</title>
+    <meta name="description" content={SITE_DESCRIPTION} />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="icon" href="/favicon.ico" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet" />
+
+    <style>
+      :root {
+        --bg:#fff; --sidebar:#f3f5f8; --text:#0f141b; --muted:#6b7280; --accent:#0a67ff;
+        --border:#e5e7eb; --maxw:1400px; --sidebar-w:270px; --card-border:#111827;
+      }
+      * { box-sizing: border-box; }
+      html, body {
+        margin: 0; padding: 0; background: var(--bg); color: var(--text);
+        font: 16px/1.6 Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      }
+      a { color: var(--accent); text-decoration: none; }
+      a:hover { text-decoration: underline; }
+
+      .site { display: grid; grid-template-columns: 1fr; min-height: 100dvh; }
+      @media (min-width: 800px) { .site { grid-template-columns: var(--sidebar-w) 1fr; } }
+
+      /* Sidebar */
+      aside { background: var(--sidebar); border-right: 1px solid var(--border); }
+      .aside-inner {
+        position: sticky; top: 0; height: 100dvh;
+        display: grid; grid-template-rows: auto 1fr auto;
+        padding: 28px 22px; gap: 18px; max-width: var(--sidebar-w); margin: 0 auto;
+      }
+      .avatar { width: 160px; height: 160px; border-radius: 999px; overflow: hidden; border: 2px solid #fff;
+        box-shadow: 0 6px 22px rgba(0,0,0,.06); margin: 0 auto; }
+      .avatar img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 35%; }
+      .who { text-align: center; margin-top: 8px; }
+      .name { font: 700 1.35rem/1.2 "Playfair Display", Georgia, serif; color: #111827; }
+      .role { font-size: .9rem; color: var(--accent); }
+      .loc { color: var(--muted); font-size: .85rem; }
+
+      .sidenav { list-style: none; margin: 18px 0; padding: 0; display: grid; gap: 10px; }
+      .sidenav a { color: #0f141b; font-weight: 600; }
+      .sidenav a.active, .sidenav a:hover { color: var(--accent); }
+
+      .copyright { color: var(--muted); font-size: .8rem; }
+
+      /* Main */
+      main { display: grid; align-content: start; }
+      .content { max-width: var(--maxw); margin-left: 0; margin-right: auto; padding: clamp(12px, 2vw, 28px); padding-left: clamp(12px, 2vw, 28px); }
+
+      .headline {
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: clamp(2.2rem, 5vw, 3.2rem);
+        line-height: 1.08; margin: 8px 0 0; color: #111827;
+      }
+      .subtext{
+        color:#374151;
+        margin:8px 0 22px;
+        font-size:1.05rem;
+
+        /* desktop: keep it on one line */
+        max-width:none;
+        white-space:nowrap;
+        overflow:hidden;           /* if it gets too long */
+        text-overflow:ellipsis;    /* show … instead of wrapping */
+      }
+
+      @media (max-width: 900px){
+        .subtext{
+          white-space:normal;
+          text-overflow:clip;
+          overflow:visible;
+          max-width:65ch;          /* optional: reintroduce a nice reading width */
+          text-wrap:pretty;        /* nicer breaks where supported */
+        }
+      }
+
+      /* Timeline */
+      .timeline { position: relative; margin-top: 8px; }
+      .timeline::before {
+        content: ""; position: absolute; left: 12px; top: 0; bottom: 0;
+        width: 2px; background: var(--border);
+      }
+
+      .exp { display: grid; gap: 14px; }
+      .exp-item { position: relative; padding-left: 44px; }
+      .dot {
+        position: absolute; left: 4px; top: 28px; width: 16px; height: 16px; border-radius: 999px;
+        background: #fff; border: 2px solid var(--accent); outline: 2px solid #fff;
+      }
+
+      .card {
+        border: 2px solid var(--card-border); border-radius: 14px; background: #fff;
+        padding: 14px 16px;
+        display: grid;
+        grid-template-columns: auto 1fr;   /* logo | text */
+        gap: 14px;
+        align-items: start;
+      }
+
+      /* Left logo */
+      .logo-wrap {
+        width: 88px; height: 88px;
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        background: #fff;
+        display: grid; place-items: center;
+        flex-shrink: 0;
+        box-shadow: 0 4px 14px rgba(0,0,0,.05);
+      }
+      .logo { width: 88%; height: 88%; object-fit: contain; image-rendering: -webkit-optimize-contrast; }
+
+      /* Text column */
+      .text-col { display: grid; gap: 4px; }
+      .years { font-weight: 700; letter-spacing: .02em; }
+      .title { font-weight: 700; color: #111827; }
+      .company { color: #111827; }
+      .company a { text-decoration: none; }
+      .company a:hover { text-decoration: underline; }
+      .meta { color: #6b7280; font-size: .95rem; }
+      .notes { margin: 6px 0 0; padding-left: 18px; color: #374151; }
+      .links { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 8px; }
+      .chip {
+        display: inline-block; border: 1px solid var(--border); padding: 6px 10px; border-radius: 999px;
+        font-size: .9rem; background: #fff; text-decoration: none;
+      }
+      .chip:hover { background: #f9fafb; text-decoration: none; }
+
+      /* Segmented engagement blocks */
+      .segments { margin-top: 10px; display: grid; gap: 0; }
+      .segment {
+        padding: 12px 0;
+        border-top: 1px solid var(--border);
+      }
+      .segment:first-child { border-top: 0; padding-top: 6px; }
+      .segment-intro { margin: 0 0 6px; color: #111827; }
+      .segment .notes { margin-top: 4px; }
+      .segment .links { margin-top: 8px; }
+
+      /* Mobile tweaks */
+      @media (max-width: 959px) {
+        aside { border-right: none; border-bottom: 1px solid var(--border); }
+        .aside-inner { position: static; height: auto; padding: 16px; }
+      }
+      @media (max-width: 640px) {
+        .logo-wrap { width: 72px; height: 72px; }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="site">
+      <!-- Sidebar -->
+      <aside>
+        <div class="aside-inner">
+          <div>
+            <div class="avatar"><img src="/images/home/portrait.jpg" alt="Stephen portrait" /></div>
+            <div class="who">
+              <div class="name">Stephen</div>
+              <a class="role" href="/">Strategist &amp; Aspiring Autodidact</a>
+              <div class="loc">Netherlands / United States</div>
+            </div>
+          </div>
+
+          <nav>
+            <ul class="sidenav">
+              <li><a href="/">Home</a></li>
+              <li><a href="/about/">About</a></li>
+              <li><a href="/education/">Education</a></li>
+              <li><a class="active" href="/experience/">Experience</a></li>
+              <li><a href="/projects/">Projects</a></li>
+              <li><a href="/photography/">Photography</a></li>
+              <li><a href="/travel/">Travel</a></li>
+              <li><a href="/thoughts/">Thoughts</a></li>
+              <li><a href="mailto:stephen@example.com">Contact</a></li>
+            </ul>
+          </nav>
+
+          <div class="copyright">© {new Date().getFullYear()} Stephen · <a href="https://github.com/S2AW" target="_blank" rel="noopener">GitHub</a></div>
+        </div>
+      </aside>
+
+      <!-- Main -->
+      <main>
+        <div class="content">
+          <h1 class="headline">Experience</h1>
+          <p class="subtext">Data, Strategy & Analytics </p>
+
+          <section class="timeline">
+            <div class="exp">
+              {EXPERIENCE.map((entry) => (
+                <article class="exp-item">
+                  <div class="dot" aria-hidden="true"></div>
+
+                  <div class="card">
+                    {/* Logo — clickable if companyUrl exists */}
+                    {isSegmented(entry) ? (
+                      entry.logo && (
+                        entry.companyUrl ? (
+                          <a class="logo-wrap" href={entry.companyUrl} target="_blank" rel="noopener" aria-label={`${entry.company} website`}>
+                            <img class="logo" src={entry.logo} alt={entry.logoAlt ?? `${entry.company} logo`} width="88" height="88" loading="lazy" />
+                          </a>
+                        ) : (
+                          <div class="logo-wrap">
+                            <img class="logo" src={entry.logo} alt={entry.logoAlt ?? `${entry.company} logo`} width="88" height="88" loading="lazy" />
+                          </div>
+                        )
+                      )
+                    ) : (
+                      (entry as SingleJob).logo && (
+                        (entry as SingleJob).companyUrl ? (
+                          <a class="logo-wrap" href={(entry as SingleJob).companyUrl} target="_blank" rel="noopener" aria-label={`${(entry as SingleJob).company} website`}>
+                            <img class="logo" src={(entry as SingleJob).logo} alt={(entry as SingleJob).logoAlt ?? `${(entry as SingleJob).company} logo`} width="88" height="88" loading="lazy" />
+                          </a>
+                        ) : (
+                          <div class="logo-wrap">
+                            <img class="logo" src={(entry as SingleJob).logo} alt={(entry as SingleJob).logoAlt ?? `${(entry as SingleJob).company} logo`} width="88" height="88" loading="lazy" />
+                          </div>
+                        )
+                      )
+                    )}
+
+                    <div class="text-col">
+                      {isSegmented(entry) ? (
+                        <>
+                          <div class="years">{entry.years}</div>
+                          <div class="title">{entry.title}</div>
+                          <div class="company">
+                            {entry.companyUrl ? (
+                              <a href={entry.companyUrl} target="_blank" rel="noopener">{entry.company}</a>
+                            ) : (
+                              entry.company
+                            )}
+                            {entry.location ? ` — ` : ""}
+                            <span class="meta">{entry.location}</span>
+                          </div>
+
+                          {/* Engagement sections */}
+                          <div class="segments">
+                            {entry.segments.map((s) => (
+                              <div class="segment">
+                                {s.intro && <p class="segment-intro">{s.intro}</p>}
+
+                                {s.bullets && s.bullets.length > 0 && (
+                                  <ul class="notes">
+                                    {s.bullets.map((b) => <li>{b}</li>)}
+                                  </ul>
+                                )}
+
+                                {s.links && s.links.length > 0 && (
+                                  <div class="links">
+                                    {s.links.map((l) => <a class="chip" href={l.href} target="_blank" rel="noopener">{l.label}</a>)}
+                                  </div>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <div class="years">{(entry as SingleJob).years}</div>
+                          <div class="title">{(entry as SingleJob).title}</div>
+                          <div class="company">
+                            {(entry as SingleJob).companyUrl ? (
+                              <a href={(entry as SingleJob).companyUrl} target="_blank" rel="noopener">{(entry as SingleJob).company}</a>
+                            ) : (
+                              (entry as SingleJob).company
+                            )}
+                            {(entry as SingleJob).location ? ` — ` : ""}
+                            <span class="meta">{(entry as SingleJob).location}</span>
+                          </div>
+
+                          {(entry as SingleJob).bullets && (entry as SingleJob).bullets!.length > 0 && (
+                            <ul class="notes">
+                              {(entry as SingleJob).bullets!.map((b) => <li>{b}</li>)}
+                            </ul>
+                          )}
+
+                          {(entry as SingleJob).links && (entry as SingleJob).links!.length > 0 && (
+                            <div class="links">
+                              {(entry as SingleJob).links!.map((l) => <a class="chip" href={l.href} target="_blank" rel="noopener">{l.label}</a>)}
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
