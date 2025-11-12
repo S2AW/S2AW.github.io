@@ -2,8 +2,7 @@
 /*
   src/pages/experience.astro
   Experience — single header per company with stacked engagement sections (like LinkedIn)
-  • Deloitte: one header (years + title + company/location) → multiple segments with intros + bullets + chips
-  • Other jobs: standard single cards
+  Now all entries use CompanyWithSegments
 */
 
 const SITE_TITLE = "Stephen — Experience";
@@ -31,24 +30,7 @@ type CompanyWithSegments = {
   segments: Segment[];
 };
 
-type SingleJob = {
-  years: string;
-  title: string;
-  company: string;
-  companyUrl?: string;
-  location?: string;
-  bullets?: string[];
-  links?: Link[];
-  logo?: string;
-  logoAlt?: string;
-};
-
-type ExperienceEntry = CompanyWithSegments | SingleJob;
-
-const isSegmented = (e: ExperienceEntry): e is CompanyWithSegments =>
-  Array.isArray((e as any).segments);
-
-const EXPERIENCE: ExperienceEntry[] = [
+const EXPERIENCE: CompanyWithSegments[] = [
   // Deloitte — one header, two engagement sections
   {
     years: "Mar 2022 – Jul 2024",
@@ -61,11 +43,11 @@ const EXPERIENCE: ExperienceEntry[] = [
     segments: [
       {
         intro:
-          "Economic Geologist:",
+          "Contracted by the Department of State’s Bureau of Energy Resources to support its Minerals Security Partnership in Greenland as an Economic Geologist:",
         bullets: [
-          "Contracted by the U.S. Department of State’s Bureau of Energy Resources to support Energy Governance and Capacity Initiative Engagement, and the Energy and Mineral Governance Program — Global Mining, Greenland.",
-          "Coordinated multi-stakeholder work for the Minerals Security Partnership; produced executive-ready reports and presentations.",
-          "Led research, brief writing, and technical writing for senior leadership."
+          "Organized coordination between Deloitte, Department of State, Government of Greenland, and geologists to determine field targets, secure aircraft and equipment, staff teams, and ensure safety before field programs;",
+          "Joined field teams in Greenland to assist with sample collection, site inspections, and sample processing as well as provide logistical support from base arranging critical supply deliveries; and",
+          "Produced detailed field program reports, documenting activities, conditions, data collected, and findings for policymakers."
         ],
         links: [
           { label: "Minerals Security Partnership", href: "https://www.state.gov/minerals-security-partnership" }
@@ -73,10 +55,11 @@ const EXPERIENCE: ExperienceEntry[] = [
       },
       {
         intro:
-          "Financial Analyst:",
+          "Contracted by the National Pollution Funds Center to enhance financial management, reporting, and internal controls for the Oil Spill Liability Trust Fund:",
         bullets: [
-          "Contracted by the U.S. Coast Guard’s National Pollution Funds Center (NPFC) to enhance financial management, financial reporting, and internal controls used to manage the Oil Spill Liability Trust Fund.",
-          "Built SharePoint/PowerApps workflows and delivered Power BI/Tableau dashboards for leadership."
+          "Migrated legacy spill-tracking systems into SharePoint, designing entity-relationship diagrams, applying database normalization, and using Python/Power Automate for ETL processes;",
+          "Developed a PowerApps interface for controlled data entry and automated notifications; and",
+          "Built Tableau and Power BI dashboards that allowed senior leadership to monitor budgets and identify financial risks across NPFC operations."
         ],
         links: [
           { label: "National Pollution Funds Center", href: "https://www.uscg.mil/Mariners/National-Pollution-Funds-Center/" }
@@ -85,42 +68,57 @@ const EXPERIENCE: ExperienceEntry[] = [
     ]
   },
 
-  // Standard single-card entries
+  // IMG-Crown — converted to segmented format (single segment)
   {
     years: "Feb 2019 – Feb 2022",
     title: "Data Analyst",
     company: "IMG-Crown",
     companyUrl: "https://www.imgcrown.com/",
     location: "Washington, D.C., USA",
-    bullets: [
-      "Coordinated with U.S. oil & gas operators and DOE analysts to ensure timely submissions for national energy publications (e.g., Monthly Oil & Gas Production Report, Natural Gas Annual).",
-      "Led communication workflows and scheduling across teams to meet publication deadlines.",
-      "Maintained, reconciled, and validated large datasets; presented findings to senior EIA officials.",
-      "Proactively improved processes to enhance coordination and data reliability."
-    ],
-    links: [
-      { label: "EIA — Natural Gas Annual", href: "https://www.eia.gov/naturalgas/annual/" },
-      { label: "Monthly Crude Oil and Natural Gas Production", href: "https://www.eia.gov/petroleum/production/" }
-    ],
     logo: "/images/experience/logos/img.jpeg",
-    logoAlt: "IMG-Crown logo"
+    logoAlt: "IMG-Crown logo",
+    segments: [
+      {
+        intro:
+          "Contracted under the Department of Energy EOP-IV Omnibus Procurement to support Energy Information Administration publications, including the Monthly Oil & Gas Production Report and the Natural Gas Annual:",
+        bullets: [
+          "Managed monthly EIA-914 survey responses from oil and gas operators, investigated data anomalies, and contacted companies to verify data;",
+          "Monitored mergers, acquisitions, and divestitures to maintain accurate operator samples, ensuring reliable state and national production estimates;",
+          "Built web scrapers and maintained databases (Python, SQL) to collect and store state-level natural gas production data reporting; and",
+          "Analyzed production trends and updated EIA officials, supporting publications and energy statistics used by Congress, academia, and industry."
+        ],
+        links: [
+          { label: "EIA — Natural Gas Annual", href: "https://www.eia.gov/naturalgas/annual/" },
+          { label: "Monthly Crude Oil and Natural Gas Production", href: "https://www.eia.gov/petroleum/production/" }
+        ]
+      }
+    ]
   },
+
+  // Columbine Logging — converted to segmented format (single segment)
   {
     years: "Aug 2018 – Jan 2019",
     title: "Wellsite Geologist",
     company: "Columbine Logging",
     companyUrl: "https://www.columbinelogging.com/",
     location: "Denver, Colorado, USA",
-    bullets: [
-      "Operated independently on drilling sites (12-hour shifts); ensured accurate communication between field teams and project managers.",
-      "Prepared detailed documentation and reports under time pressure with consistent QA.",
-      "Demonstrated flexibility and problem-solving in remote, fast-paced environments."
-    ],
-    links: [
-      { label: "Powder River Basin overview", href: "https://www.usgs.gov/centers/energy-resources-program/science/powder-river-basin" }
-    ],
     logo: "/images/experience/logos/columbine.jpeg",
-    logoAlt: "Columbine Logging logo"
+    logoAlt: "Columbine Logging logo",
+    segments: [
+      {
+        intro:
+          "Subcontracted to various oil and gas operators to provide mudlogging services across basins in Wyoming and Colorado:",
+        bullets: [
+          "Provided 12-hour night shift coverage to drilling projects;",
+          "Operated gas chromatographs to measure casinghead gas and monitored drilling parameters in real time;",
+          "Collected and analyzed drill cuttings to describe formations for accurate mapping and safe drilling; and",
+          "Delivered final well logs including drilling data, gas readings, and rock descriptions, to well managers."
+        ],
+        links: [
+          { label: "Powder River Basin overview", href: "https://www.usgs.gov/centers/energy-resources-program/science/powder-river-basin" }
+        ]
+      }
+    ]
   }
 ];
 ---
@@ -189,17 +187,16 @@ const EXPERIENCE: ExperienceEntry[] = [
         /* desktop: keep it on one line */
         max-width:none;
         white-space:nowrap;
-        overflow:hidden;           /* if it gets too long */
-        text-overflow:ellipsis;    /* show … instead of wrapping */
+        overflow:hidden;
+        text-overflow:ellipsis;
       }
-
       @media (max-width: 900px){
         .subtext{
           white-space:normal;
           text-overflow:clip;
           overflow:visible;
-          max-width:65ch;          /* optional: reintroduce a nice reading width */
-          text-wrap:pretty;        /* nicer breaks where supported */
+          max-width:65ch;
+          text-wrap:pretty;
         }
       }
 
@@ -313,105 +310,65 @@ const EXPERIENCE: ExperienceEntry[] = [
       <main>
         <div class="content">
           <h1 class="headline">Experience</h1>
-          <p class="subtext">Data, Strategy & Analytics </p>
+          <p class="subtext">Data, Strategy & Analytics</p>
 
           <section class="timeline">
             <div class="exp">
-              {EXPERIENCE.map((entry) => (
+              {EXPERIENCE.map((entry, idx) => (
                 <article class="exp-item">
                   <div class="dot" aria-hidden="true"></div>
 
                   <div class="card">
                     {/* Logo — clickable if companyUrl exists */}
-                    {isSegmented(entry) ? (
-                      entry.logo && (
-                        entry.companyUrl ? (
-                          <a class="logo-wrap" href={entry.companyUrl} target="_blank" rel="noopener" aria-label={`${entry.company} website`}>
-                            <img class="logo" src={entry.logo} alt={entry.logoAlt ?? `${entry.company} logo`} width="88" height="88" loading="lazy" />
-                          </a>
-                        ) : (
-                          <div class="logo-wrap">
-                            <img class="logo" src={entry.logo} alt={entry.logoAlt ?? `${entry.company} logo`} width="88" height="88" loading="lazy" />
-                          </div>
-                        )
+                    {entry.logo ? (
+                      entry.companyUrl ? (
+                        <a class="logo-wrap" href={entry.companyUrl} target="_blank" rel="noopener" aria-label={`${entry.company} website`}>
+                          <img class="logo" src={entry.logo} alt={entry.logoAlt ?? `${entry.company} logo`} width="88" height="88" loading="lazy" />
+                        </a>
+                      ) : (
+                        <div class="logo-wrap">
+                          <img class="logo" src={entry.logo} alt={entry.logoAlt ?? `${entry.company} logo`} width="88" height="88" loading="lazy" />
+                        </div>
                       )
                     ) : (
-                      (entry as SingleJob).logo && (
-                        (entry as SingleJob).companyUrl ? (
-                          <a class="logo-wrap" href={(entry as SingleJob).companyUrl} target="_blank" rel="noopener" aria-label={`${(entry as SingleJob).company} website`}>
-                            <img class="logo" src={(entry as SingleJob).logo} alt={(entry as SingleJob).logoAlt ?? `${(entry as SingleJob).company} logo`} width="88" height="88" loading="lazy" />
-                          </a>
-                        ) : (
-                          <div class="logo-wrap">
-                            <img class="logo" src={(entry as SingleJob).logo} alt={(entry as SingleJob).logoAlt ?? `${(entry as SingleJob).company} logo`} width="88" height="88" loading="lazy" />
-                          </div>
-                        )
-                      )
+                      <div class="logo-wrap" aria-hidden="true"></div>
                     )}
 
                     <div class="text-col">
-                      {isSegmented(entry) ? (
-                        <>
-                          <div class="years">{entry.years}</div>
-                          <div class="title">{entry.title}</div>
-                          <div class="company">
-                            {entry.companyUrl ? (
-                              <a href={entry.companyUrl} target="_blank" rel="noopener">{entry.company}</a>
-                            ) : (
-                              entry.company
+                      <div class="years">{entry.years}</div>
+                      <div class="title">{entry.title}</div>
+                      <div class="company">
+                        {entry.companyUrl ? (
+                          <a href={entry.companyUrl} target="_blank" rel="noopener">{entry.company}</a>
+                        ) : (
+                          entry.company
+                        )}
+                        {entry.location ? ` — ` : ""}
+                        <span class="meta">{entry.location}</span>
+                      </div>
+
+                      {/* Engagement sections */}
+                      <div class="segments">
+                        {entry.segments.map((s, i) => (
+                          <div class="segment">
+                            {s.intro && <p class="segment-intro">{s.intro}</p>}
+
+                            {s.bullets && s.bullets.length > 0 && (
+                              <ul class="notes">
+                                {s.bullets.map((b) => <li>{b}</li>)}
+                              </ul>
                             )}
-                            {entry.location ? ` — ` : ""}
-                            <span class="meta">{entry.location}</span>
-                          </div>
 
-                          {/* Engagement sections */}
-                          <div class="segments">
-                            {entry.segments.map((s) => (
-                              <div class="segment">
-                                {s.intro && <p class="segment-intro">{s.intro}</p>}
-
-                                {s.bullets && s.bullets.length > 0 && (
-                                  <ul class="notes">
-                                    {s.bullets.map((b) => <li>{b}</li>)}
-                                  </ul>
-                                )}
-
-                                {s.links && s.links.length > 0 && (
-                                  <div class="links">
-                                    {s.links.map((l) => <a class="chip" href={l.href} target="_blank" rel="noopener">{l.label}</a>)}
-                                  </div>
-                                )}
+                            {s.links && s.links.length > 0 && (
+                              <div class="links">
+                                {s.links.map((l) => (
+                                  <a class="chip" href={l.href} target="_blank" rel="noopener">{l.label}</a>
+                                ))}
                               </div>
-                            ))}
-                          </div>
-                        </>
-                      ) : (
-                        <>
-                          <div class="years">{(entry as SingleJob).years}</div>
-                          <div class="title">{(entry as SingleJob).title}</div>
-                          <div class="company">
-                            {(entry as SingleJob).companyUrl ? (
-                              <a href={(entry as SingleJob).companyUrl} target="_blank" rel="noopener">{(entry as SingleJob).company}</a>
-                            ) : (
-                              (entry as SingleJob).company
                             )}
-                            {(entry as SingleJob).location ? ` — ` : ""}
-                            <span class="meta">{(entry as SingleJob).location}</span>
                           </div>
-
-                          {(entry as SingleJob).bullets && (entry as SingleJob).bullets!.length > 0 && (
-                            <ul class="notes">
-                              {(entry as SingleJob).bullets!.map((b) => <li>{b}</li>)}
-                            </ul>
-                          )}
-
-                          {(entry as SingleJob).links && (entry as SingleJob).links!.length > 0 && (
-                            <div class="links">
-                              {(entry as SingleJob).links!.map((l) => <a class="chip" href={l.href} target="_blank" rel="noopener">{l.label}</a>)}
-                            </div>
-                          )}
-                        </>
-                      )}
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </article>

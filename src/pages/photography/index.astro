@@ -7,6 +7,10 @@
 const SITE_TITLE = "Stephen — Photography";
 const SITE_DESCRIPTION = "Camera gear, plus albums I add to over time.";
 
+// Replace with your real camera URL and image path
+const CAMERA_URL = "https://example.com/olympus-om5";
+const CAMERA_IMG_SRC = "/images/photography/gear/om-5.jpg";
+
 const NAV = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about/" },
@@ -73,6 +77,12 @@ const NAV = [
       .gear-item{border:1px dashed #cbd5e1;border-radius:10px;padding:10px}
       .gear-item b{display:block;margin-bottom:6px}
 
+      /* Camera image link box */
+      .image-item{display:grid;gap:10px}
+      .camera-link{display:block;border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+      .camera-link:hover{box-shadow:0 4px 16px rgba(0,0,0,.06)}
+      .camera-img{width:100%;height:100%;object-fit:cover;aspect-ratio:4/3;background:#f3f4f6}
+
       @media(max-width:959px){aside{border-right:none;border-bottom:1px solid var(--border)}.aside-inner{position:static;height:auto;padding:16px}}
     </style>
   </head>
@@ -112,25 +122,32 @@ const NAV = [
               <div class="gear-grid">
                 <div class="gear-item">
                   <b>Camera Bodies</b>
-                  <div>Sony α7 IV</div>
-                  <div>Canon EOS R10</div>
+                  <div>Olympus OM-5</div>
+                  <div>Various iPhones</div>
                 </div>
+
                 <div class="gear-item">
                   <b>Lenses</b>
-                  <div>Sony 70–200mm f/2.8 GM II</div>
-                  <div>Sony 24–70mm f/2.8 GM</div>
-                  <div>Sigma 150–600mm f/5–6.3</div>
+                  <div>Olympus M.Zuiko Digital 14–42mm f/3.5–5.6 EZ</div>
+                  <div>Olympus M.Zuiko Digital ED 75–300mm f/4.8–6.7</div>
                 </div>
-                <div class="gear-item">
-                  <b>Accessories</b>
-                  <div>Peak Design Travel Tripod (Carbon)</div>
-                  <div>Røde VideoMic NTG</div>
-                  <div>DJI Mic 2</div>
-                </div>
-                <div class="gear-item">
-                  <b>Software</b>
-                  <div>Lightroom Classic</div>
-                  <div>Topaz Photo AI</div>
+
+                <!-- Clickable camera image box (appears to the right of Lenses on desktop) -->
+                <div class="gear-item image-item" style="border: none; padding: 0;">
+                  <a
+                    class="camera-link"
+                    href="https://explore.omsystem.com/gb/en/om-5-black-12-45mm-pro-lens-kit"
+                    target="_blank"
+                    rel="noopener"
+                    style="border: none; box-shadow: none;"
+                  >
+                    <img
+                      class="camera-img"
+                      src="/images/photography/omd5.jpg"
+                      alt="Olympus OM-5 camera"
+                      style="width: 150px; height: auto; border-radius: 6px; display: block; margin-left: auto; margin-right: auto;"
+                    />
+                  </a>
                 </div>
               </div>
             </div>
