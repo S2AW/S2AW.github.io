@@ -1,0 +1,477 @@
+---
+const SITE_TITLE = "Stephen — Coffee Photography";
+const SITE_DESCRIPTION = "Coffee-focused photos you can click through.";
+
+const NAV = [
+  { label: "Home", href: "/" },
+  { label: "About", href: "/about/" },
+  { label: "Education", href: "/education/" },
+  { label: "Experience", href: "/experience/" },
+  { label: "Projects", href: "/projects/" },
+  { label: "Photography", href: "/photography/", active: true },
+  { label: "Travel", href: "/travel/" },
+  { label: "Thoughts", href: "/thoughts/" },
+  { label: "Contact", href: "mailto:stephen@example.com" },
+];
+
+const IMAGES = [
+  "/images/photography/coffee/1.jpg",
+  "/images/photography/coffee/2.jpg",
+  "/images/photography/coffee/3.jpg",
+  "/images/photography/coffee/4.jpg",
+  "/images/photography/coffee/5.jpg",
+  "/images/photography/coffee/6.jpg",
+  "/images/photography/coffee/7.jpg",
+];
+---
+
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{SITE_TITLE}</title>
+    <meta name="description" content={SITE_DESCRIPTION} />
+    <link rel="icon" href="/favicon.ico" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --bg:#fff;
+        --sidebar:#f3f5f8;
+        --text:#0f141b;
+        --muted:#6b7280;
+        --accent:#0a67ff;
+        --border:#e5e7eb;
+        --maxw:1400px;
+        --sidebar-w:270px;
+      }
+
+      *{box-sizing:border-box}
+
+      html,body{
+        margin:0;
+        padding:0;
+        background:var(--bg);
+        color:var(--text);
+        font:16px/1.6 Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      }
+
+      img{max-width:100%;display:block}
+      a{color:var(--accent);text-decoration:none}
+      a:hover{text-decoration:underline}
+
+      .site{display:grid;grid-template-columns:1fr;min-height:100vh}
+      @media(min-width:800px){.site{grid-template-columns:var(--sidebar-w) 1fr}}
+
+      aside{background:var(--sidebar);border-right:1px solid var(--border)}
+      .aside-inner{
+        position:sticky;
+        top:0;
+        height:100vh;
+        display:grid;
+        grid-template-rows:auto 1fr auto;
+        padding:28px 22px;
+        gap:18px;
+      }
+
+      .avatar{
+        width:160px;
+        height:160px;
+        border-radius:999px;
+        overflow:hidden;
+        margin:0 auto;
+        border:2px solid #fff;
+        box-shadow:0 6px 22px rgba(0,0,0,.06);
+      }
+
+      .who{text-align:center;margin-top:8px}
+      .name{
+        font-family:"Playfair Display",Georgia,serif;
+        font-size:1.35rem;
+        margin-bottom:4px;
+      }
+      .role{font-size:.9rem;color:var(--accent)}
+      .loc{font-size:.85rem;color:var(--muted)}
+
+      .sidenav{
+        list-style:none;
+        margin:20px 0 0;
+        padding:0;
+        display:grid;
+        gap:10px;
+      }
+      .sidenav a{color:#0f141b;font-weight:600}
+      .sidenav a.active,.sidenav a:hover{color:var(--accent)}
+
+      .copyright{font-size:.8rem;color:var(--muted)}
+
+      main{display:grid;align-content:start}
+      .content{
+        max-width:var(--maxw);
+        margin-right:auto;
+        padding:24px;
+      }
+
+      .headline{
+        font-family:"Playfair Display",Georgia,serif;
+        font-size:clamp(2.2rem,4.5vw,3.2rem);
+        line-height:1.08;
+        margin:8px 0 0;
+      }
+      .subtext{
+        color:#374151;
+        margin:8px 0 22px;
+        font-size:1.02rem;
+      }
+
+      .back-link{
+        font-size:.9rem;
+        margin-bottom:8px;
+        display:inline-flex;
+        align-items:center;
+        gap:6px;
+        color:#374151;
+      }
+
+      .gallery-grid{
+        display:grid;
+        gap:12px;
+        grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+        margin-top:20px;
+      }
+
+      .thumb{
+        position:relative;
+        border-radius:12px;
+        overflow:hidden;
+        cursor:pointer;
+        border:none;
+        background:none;
+        padding:0;
+      }
+
+      .thumb img{
+        width:100%;
+        height:100%;
+        object-fit:cover;
+        aspect-ratio:4/5;
+        transition:transform .15s ease-out;
+        background:none;
+      }
+
+      .thumb:hover img{transform:scale(1.03)}
+
+      .thumb-overlay{
+        position:absolute;
+        inset:0;
+        background:linear-gradient(to top,rgba(0,0,0,.45),transparent);
+        opacity:0;
+        transition:opacity .15s ease-out;
+      }
+      .thumb:hover .thumb-overlay{opacity:1}
+
+      .thumb-badge{
+        position:absolute;
+        left:8px;
+        bottom:8px;
+        padding:4px 8px;
+        border-radius:999px;
+        background:rgba(15,23,42,.85);
+        color:#f9fafb;
+        font-size:.75rem;
+        letter-spacing:.08em;
+        text-transform:uppercase;
+      }
+
+      /* Lightbox */
+
+      .lightbox-backdrop{
+        position:fixed;
+        inset:0;
+        background:rgba(15,23,42,.9);
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        padding:16px;
+        z-index:40;
+        opacity:0;
+        pointer-events:none;
+        transition:opacity .16s ease-out;
+      }
+      .lightbox-backdrop.is-open{
+        opacity:1;
+        pointer-events:auto;
+      }
+
+      .lightbox-frame{
+        border-radius:16px;
+        padding:12px;
+        background:#020617;
+        border:1px solid rgba(148,163,184,.7);
+        box-shadow:0 22px 60px rgba(0,0,0,.7);
+      }
+
+      .lightbox-image-wrap{
+        position:relative;
+        border-radius:10px;
+        background:#020617;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        overflow:visible;
+      }
+
+      .lightbox-image-wrap img{
+        display:block;
+        width:auto;
+        height:auto;
+        max-width:100%;
+        max-height:calc(100vh - 200px);
+        object-fit:contain;
+      }
+
+      .lightbox-controls{
+        position:absolute;
+        inset:0;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        padding:0 6px;
+        pointer-events:none;
+      }
+
+      .lightbox-arrow{
+        width:42px;
+        height:42px;
+        border-radius:999px;
+        border:1px solid rgba(148,163,184,.8);
+        background:radial-gradient(circle at top,rgba(15,23,42,.4),rgba(15,23,42,.9));
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        cursor:pointer;
+        color:#e5e7eb;
+        pointer-events:auto;
+      }
+
+      .lightbox-top{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        margin-top:6px;
+        color:#e5e7eb;
+        font-size:.85rem;
+      }
+
+      .pill-button{
+        border-radius:999px;
+        border:1px solid rgba(148,163,184,.7);
+        background:linear-gradient(90deg,#111827,#020617);
+        color:#f9fafb;
+        font-size:.75rem;
+        letter-spacing:.16em;
+        text-transform:uppercase;
+        padding:6px 10px;
+        display:inline-flex;
+        align-items:center;
+        gap:6px;
+        cursor:pointer;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="site">
+      <aside>
+        <div class="aside-inner">
+          <div>
+            <div class="avatar">
+              <img src="/images/home/portrait.jpg" alt="Stephen portrait" />
+            </div>
+            <div class="who">
+              <div class="name">Stephen</div>
+              <a class="role" href="/">Strategist &amp; Aspiring Autodidact</a>
+              <div class="loc">Netherlands / United States</div>
+            </div>
+          </div>
+
+          <nav>
+            <ul class="sidenav">
+              {NAV.map((n) => (
+                <li>
+                  <a class={n.active ? "active" : ""} href={n.href}>
+                    {n.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div class="copyright">
+            © {new Date().getFullYear()} Stephen ·{" "}
+            <a href="https://github.com/S2AW" target="_blank" rel="noopener">
+              GitHub
+            </a>
+          </div>
+        </div>
+      </aside>
+
+      <main>
+        <div class="content">
+          <a href="/photography/" class="back-link">
+            <span>←</span> Back to albums
+          </a>
+
+          <h1 class="headline">Coffee</h1>
+          <p class="subtext">
+            A bitter, aromatic sacrifice offered each morning to appease the god
+            of Productivity; valued chiefly for its ability to transform human
+            reluctance into jittery compliance, and afternoons into tolerable
+            rumors of alertness.
+          </p>
+
+          <div class="gallery-grid" id="coffee-gallery">
+            {IMAGES.map((src, index) => (
+              <button
+                type="button"
+                class="thumb"
+                data-index={index}
+                aria-label={`Open coffee photo ${index + 1}`}
+              >
+                <img src={src} alt={`Coffee photo ${index + 1}`} loading="lazy" />
+                <div class="thumb-overlay">
+                  <div class="thumb-badge">View</div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <div class="lightbox-backdrop" id="lightbox-backdrop" aria-hidden="true">
+      <div class="lightbox-frame">
+        <div class="lightbox-image-wrap">
+          <img id="lightbox-image" src="" alt="" />
+          <div class="lightbox-controls">
+            <button
+              type="button"
+              class="lightbox-arrow"
+              id="lightbox-prev"
+              aria-label="Previous photo"
+            >
+              ‹
+            </button>
+            <button
+              type="button"
+              class="lightbox-arrow"
+              id="lightbox-next"
+              aria-label="Next photo"
+            >
+              ›
+            </button>
+          </div>
+        </div>
+
+        <div class="lightbox-top">
+          <div id="lightbox-index">1 / 1</div>
+          <button
+            type="button"
+            class="pill-button"
+            id="lightbox-close"
+            aria-label="Close viewer"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // @ts-nocheck
+      (function () {
+        const backdrop = document.getElementById("lightbox-backdrop");
+        const imgEl = document.getElementById("lightbox-image");
+        const indexEl = document.getElementById("lightbox-index");
+        const prevBtn = document.getElementById("lightbox-prev");
+        const nextBtn = document.getElementById("lightbox-next");
+        const closeBtn = document.getElementById("lightbox-close");
+        const thumbButtons = Array.from(
+          document.querySelectorAll("#coffee-gallery .thumb")
+        );
+
+        if (!backdrop || !imgEl || !indexEl || thumbButtons.length === 0) {
+          return;
+        }
+
+        const images = thumbButtons
+          .map((btn) => {
+            const img = btn.querySelector("img");
+            return img ? img.getAttribute("src") : null;
+          })
+          .filter(Boolean);
+
+        let currentIndex = 0;
+
+        function updateLightbox() {
+          const src = images[currentIndex];
+          if (!src) return;
+          imgEl.src = src;
+          imgEl.alt = "Coffee photo " + (currentIndex + 1);
+          indexEl.textContent = (currentIndex + 1) + " / " + images.length;
+        }
+
+        function openAt(index) {
+          if (!images.length) return;
+          currentIndex = index;
+          updateLightbox();
+          backdrop.classList.add("is-open");
+          backdrop.setAttribute("aria-hidden", "false");
+        }
+
+        function closeBox() {
+          backdrop.classList.remove("is-open");
+          backdrop.setAttribute("aria-hidden", "true");
+        }
+
+        function showNext() {
+          currentIndex = (currentIndex + 1) % images.length;
+          updateLightbox();
+        }
+
+        function showPrev() {
+          currentIndex = (currentIndex - 1 + images.length) % images.length;
+          updateLightbox();
+        }
+
+        thumbButtons.forEach((btn, index) => {
+          btn.addEventListener("click", () => openAt(index));
+        });
+
+        if (prevBtn) prevBtn.addEventListener("click", showPrev);
+        if (nextBtn) nextBtn.addEventListener("click", showNext);
+        if (closeBtn) closeBtn.addEventListener("click", closeBox);
+
+        backdrop.addEventListener("click", (event) => {
+          if (event.target === backdrop) {
+            closeBox();
+          }
+        });
+
+        document.addEventListener("keydown", (event) => {
+          if (!backdrop.classList.contains("is-open")) return;
+          if (event.key === "Escape") {
+            closeBox();
+          } else if (event.key === "ArrowRight") {
+            showNext();
+          } else if (event.key === "ArrowLeft") {
+            showPrev();
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>

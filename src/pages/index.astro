@@ -29,16 +29,16 @@ const LATEST_PROJECT = {
   thumb: "/images/home/project-thumb.jpg",
 };
 const LATEST_PHOTO = {
-  href: "/photography/#latest",
-  title: "New photo set",
-  desc: "Subtitle/quick description",
-  thumb: "/images/home/photo-thumb.jpg",
+  href: "/photography/coffee/",
+  title: "Coffee",
+  desc: "Caffeine rituals & special brews.",
+  thumb: "/images/photography/coffee/7.jpg",
 };
 const LATEST_TRAVEL = {
-  href: "/travel/#latest",
+  href: "/travel/porto/",
   title: "Recent trip",
-  desc: "Subtitle/quick description",
-  thumb: "/images/home/travel-thumb.jpg",
+  desc: "Porto, Portugal",
+  thumb: "/images/travel/porto/1.jpg",
 };
 const LATEST_THOUGHTS = {
   href: "/thoughts/#latest",
@@ -324,7 +324,7 @@ const LATEST_THOUGHTS = {
       }
 
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      function start() { if (!reduce) { stop(); timer = setInterval(() => show(i + 1), 8000); } }
+      function start() { if (!reduce) { stop(); timer = setInterval(() => show(i + 1), 6000); } }
       function stop() { if (timer) { clearInterval(timer); timer = null; } }
 
       prev?.addEventListener('click', () => { show(i - 1); start(); });

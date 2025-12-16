@@ -10,7 +10,7 @@ const SITE_TITLE = "Stephen — Travel";
 const SITE_DESCRIPTION = "World map, featured trips, and a grid of journeys.";
 
 type Trip = {
-  slug: string;
+  slug: string;    // used in /travel/{slug}
   title: string;
   where: string;
   country?: string;
@@ -20,7 +20,7 @@ type Trip = {
 
 const TRIPS: Trip[] = [
   {
-    slug: "Florence Wedding",
+    slug: "florence-wedding",
     title: "Florence Wedding",
     where: "Florence, Italy",
     country: "Italy",
@@ -28,7 +28,7 @@ const TRIPS: Trip[] = [
     summary: "Quick getaway to celebrate love on the vineyards",
   },
   {
-    slug: "Catalonia",
+    slug: "catalonia",
     title: "Catalonia Beaches",
     where: "Catalonia, Spain",
     country: "Spain",
@@ -36,22 +36,21 @@ const TRIPS: Trip[] = [
     summary: "Summer Holiday in Spain",
   },
   {
-    slug: "Porto",
+    slug: "porto",
     title: "Porto, Portugal",
-    where: "Porto, Portugal",
+    where: "The Undefeated City",
     country: "Portugal",
-    cover: "/images/travel/utah/cover.jpg",
+    cover: "/images/travel/porto/1.jpg",
     summary: "A loop through four national parks.",
   },
   {
-    slug: "utah-parks-2023",
-    title: "Utah Parks Road Trip",
-    where: "Zion, Bryce, Arches — USA",
-    country: "United States",
+    slug: "tromso",
+    title: "Tromsø, Norway",
+    where: "Paris of the North",
+    country: "Norway",
     cover: "/images/travel/utah/cover.jpg",
     summary: "A loop through four national parks.",
   }
-
 ];
 
 const FEATURED = [...TRIPS];
@@ -129,6 +128,7 @@ const FEATURED = [...TRIPS];
       .grid{display:grid;gap:18px;grid-template-columns:repeat(1,1fr)}
       @media(min-width:720px){.grid{grid-template-columns:repeat(3,1fr)}}
       @media(min-width:1100px){.grid{grid-template-columns:repeat(5,1fr)}}
+
       .card{border:2px solid #111827;border-radius:14px;overflow:hidden;background:#fff}
       .cover{aspect-ratio:16/10;width:100%;object-fit:cover;background:#f3f4f6}
       .body{padding:10px}
@@ -190,7 +190,9 @@ const FEATURED = [...TRIPS];
           <div class="grid" id="tripGrid">
             {FEATURED.map((t) => (
               <article class="card" id={t.slug}>
-                <img class="cover" src={t.cover} alt={`${t.title} cover`} />
+                <a href={`/travel/${t.slug}`}>
+                  <img class="cover" src={t.cover} alt={`${t.title} cover`} />
+                </a>
                 <div class="body">
                   <div class="title">{t.country ?? t.where}</div>
                   <div class="subtitle">{t.title}</div>
@@ -263,7 +265,9 @@ const FEATURED = [...TRIPS];
 
       document.getElementById("zoomIn").onclick = () => svg.transition().duration(200).call(zoom.scaleBy, 1.3);
       document.getElementById("zoomOut").onclick = () => svg.transition().duration(200).call(zoom.scaleBy, 1 / 1.3);
-      document.getElementById("resetView").onclick = () => {svg.transition().duration(300).call(zoom.transform, d3.zoomIdentity);};
+      document.getElementById("resetView").onclick = () => {
+        svg.transition().duration(300).call(zoom.transform, d3.zoomIdentity);
+      };
     </script>
   </body>
 </html>
