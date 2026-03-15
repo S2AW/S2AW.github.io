@@ -1,4 +1,6 @@
 ---
+import MainLayout2 from "../../layouts/mainlayout2.astro";
+
 const SITE_TITLE = "Stephen — Thoughts";
 const SITE_DESCRIPTION = "Longer-form ideas, notes, and experiments.";
 
@@ -6,284 +8,118 @@ const SUBSTACK_URL = "https://s2aw.substack.com/";
 const SUBSTACK_EMBED_URL = `${SUBSTACK_URL}/embed`;
 ---
 
-<html lang="en" data-theme="light">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{SITE_TITLE}</title>
-    <meta name="description" content={SITE_DESCRIPTION} />
-    <link rel="icon" href="/favicon.ico" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;700&display=swap"
-      rel="stylesheet"
-    />
+<MainLayout2
+  title={SITE_TITLE}
+  description={SITE_DESCRIPTION}
+  activeNav="thoughts"
+  pageTitle="Thoughts"
+  pageDescription="Longer-form ideas, notes, and experiments. I publish them over on Substack, and you can read them directly here or open them in a new tab."
+  wideHeader={true}
+>
+  <div class="cta-row">
+    <a
+      href={SUBSTACK_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="btn primary"
+    >
+      View on Substack
+    </a>
+    <a
+      href={`${SUBSTACK_URL}/subscribe`}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="btn secondary"
+    >
+      Subscribe via email
+    </a>
+  </div>
 
-    <style>
-      :root {
-        --bg:#fff; --sidebar:#f3f5f8; --text:#0f141b; --muted:#6b7280; --accent:#0a67ff;
-        --border:#e5e7eb; --maxw:1400px; --sidebar-w:270px;
-        --map-stroke:#1f2937; --map-water:#f6f9ff; --land:#f8fafc; --visited-country:#0a67ff;
-      }
-      *{box-sizing:border-box}
-      html,body{
-        margin:0;
-        padding:0;
-        background:var(--bg);
-        color:var(--text);
-        font:16px/1.6 Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
-      }
-      img{max-width:100%;display:block}
-      a{color:var(--accent);text-decoration:none}
-      a:hover{text-decoration:underline}
-
-      .site{display:grid;grid-template-columns:1fr;min-height:100dvh}
-      @media(min-width:800px){
-        .site{grid-template-columns:var(--sidebar-w) 1fr}
-      }
-
-      aside{
-        background:var(--sidebar);
-        border-right:1px solid var(--border);
-      }
-      .aside-inner{
-        position:sticky;
-        top:0;
-        height:100dvh;
-        display:grid;
-        grid-template-rows:auto 1fr auto;
-        padding:28px 22px;
-        gap:18px;
-        max-width:var(--sidebar-w);
-        margin:0 auto;
-      }
-      .avatar{
-        width:160px;
-        height:160px;
-        border-radius:999px;
-        overflow:hidden;
-        border:2px solid #fff;
-        box-shadow:0 6px 22px rgba(0,0,0,.06);
-        margin:0 auto;
-      }
-      .avatar img{
-        width:100%;
-        height:100%;
-        object-fit:cover;
-        object-position:50% 35%;
-      }
-      .who{text-align:center;margin-top:8px}
-      .name{
-        font:700 1.35rem/1.2 "Playfair Display",Georgia,serif;
-        color:#111827;
-      }
-      .role{font-size:.9rem;color:var(--accent)}
-      .loc{color:var(--muted);font-size:.85rem}
-
-      .sidenav{
-        list-style:none;
-        margin:18px 0;
-        padding:0;
-        display:grid;
-        gap:10px;
-      }
-      .sidenav a{
-        color:#0f141b;
-        font-weight:600;
-      }
-      .sidenav a.active,
-      .sidenav a:hover{
-        color:var(--accent);
-      }
-
-      .copyright{
-        color:var(--muted);
-        font-size:.8rem;
-      }
-
-      main{
-        display:grid;
-        align-content:start;
-      }
-      .content{
-        max-width: none;
-		width: 90%;
-        margin-left: 0;
-        margin-right: auto;
-        padding: clamp(12px, 2vw, 28px);
-        padding-left: clamp(12px, 2vw, 28px);
-      }
-      .headline{
-        font-family:"Playfair Display",Georgia,serif;
-        font-size:clamp(2.6rem,5vw,3.8rem);
-        line-height:1.08;
-        margin:8px 0 0;
-      }
-      .subtext{
-        color:#374151;
-        max-width:none;
-        margin:8px 0 22px;
-        font-size:1.05rem;
-      }
-
-      /* Reuse the same visual style as the map card for the embed */
-      .embed-wrap{
-        margin-top:10px;
-        background:linear-gradient(180deg,#f8fbff,#fff);
-        border:1px solid var(--border);
-        border-radius:16px;
-        padding:12px;
-        position:relative;
-        min-height:400px;
-        overflow:hidden;
-      }
-      .embed-inner{
-        border-radius:12px;
-        background:#ffffff;
-        overflow:hidden;
-        border:1px solid rgba(0,0,0,0.03);
-      }
-      .embed-frame{
-        width:100%;
-        height:95vh;
-        min-height:520px;
-        border:none;
-        display:block;
-      }
-
-      .cta-row{
-        display:flex;
-        flex-wrap:wrap;
-        gap:0.75rem;
-        align-items:center;
-        margin-top:0.75rem;
-      }
-      .btn{
-        display:inline-flex;
-        align-items:center;
-        justify-content:center;
-        padding:0.6rem 1.3rem;
-        border-radius:999px;
-        text-decoration:none;
-        border:1px solid currentColor;
-        font-size:0.95rem;
-        white-space:nowrap;
-      }
-      .btn.primary{
-        border:none;
-        color:#fff;
-        background:#111827;
-      }
-      .btn.secondary{
-        color:#111827;
-        background:#f3f4f6;
-      }
-
-      @media(max-width:959px){
-        aside{
-          border-right:none;
-          border-bottom:1px solid var(--border);
-        }
-        .aside-inner{
-          position:static;
-          height:auto;
-          padding:16px;
-        }
-      }
-
-      @media(max-width:600px){
-        .content{
-          padding:3rem 1.25rem 4rem;
-        }
-        .headline{
-          font-size:2.2rem;
-        }
-        .cta-row{
-          flex-direction:column;
-          align-items:flex-start;
-        }
-        .embed-frame{
-          height:70vh;
-          min-height:450px;
-        }
-      }
-    </style>
-  </head>
-
-  <body>
-    <div class="site">
-      <aside>
-        <div class="aside-inner">
-          <div>
-            <div class="avatar">
-              <img src="/images/home/portrait.jpg" alt="Stephen portrait" />
-            </div>
-            <div class="who">
-              <div class="name">Stephen</div>
-              <a class="role" href="/">Strategist &amp; Aspiring Autodidact</a>
-              <div class="loc">Netherlands / United States</div>
-            </div>
-          </div>
-
-          <nav>
-            <ul class="sidenav">
-              <li><a href="/">Home</a></li>
-              <li><a href="/about/">About</a></li>
-              <li><a href="/education/">Education</a></li>
-              <li><a href="/experience/">Experience</a></li>
-              <li><a href="/projects/">Projects</a></li>
-              <li><a href="/photography/">Photography</a></li>
-              <li><a href="/travel/">Travel</a></li>
-              <li><a class="active" href="/thoughts/">Thoughts</a></li>
-              <li><a href="mailto:stephen@example.com">Contact</a></li>
-            </ul>
-          </nav>
-
-          <div class="copyright">
-            © {new Date().getFullYear()} Stephen ·
-            <a href="https://github.com/S2AW" target="_blank" rel="noopener">GitHub</a>
-          </div>
-        </div>
-      </aside>
-
-      <main>
-        <div class="content">
-          <h1 class="headline">Thoughts</h1>
-          <p class="subtext">
-            Longer-form ideas, notes, and experiments. I publish them over on Substack,
-            and you can read them directly here or open them in a new tab.
-          </p>
-
-          <div class="cta-row">
-            <a
-              href={SUBSTACK_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="btn primary"
-            >
-              View on Substack
-            </a>
-            <a
-              href={`${SUBSTACK_URL}/subscribe`}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="btn secondary"
-            >
-              Subscribe via email
-            </a>
-          </div>
-
-          <section class="embed-wrap">
-            <div class="embed-inner">
-              <iframe
-                src={SUBSTACK_EMBED_URL}
-                loading="lazy"
-                class="embed-frame"
-                title="Substack – Thoughts"
-              ></iframe>
-            </div>
-          </section>
-        </div>
-      </main>
+  <section class="embed-wrap">
+    <div class="embed-inner">
+      <iframe
+        src={SUBSTACK_EMBED_URL}
+        loading="lazy"
+        class="embed-frame"
+        title="Substack – Thoughts"
+      ></iframe>
     </div>
-  </body>
-</html>
+  </section>
+
+  <style>
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      margin-top: 0.75rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.6rem 1.3rem;
+      border-radius: 999px;
+      text-decoration: none;
+      border: 1px solid currentColor;
+      font-size: 0.95rem;
+      white-space: nowrap;
+      transition:
+        background-color var(--transition-fast),
+        color var(--transition-fast),
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast);
+    }
+
+    .btn.primary {
+      border: 1px solid var(--card-border);
+      color: var(--surface);
+      background: var(--title);
+    }
+
+    .btn.secondary {
+      color: var(--title);
+      background: var(--surface-muted);
+      border-color: var(--border);
+    }
+
+    .embed-wrap {
+      margin-top: 10px;
+      background: linear-gradient(180deg, var(--surface-muted), var(--surface));
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px;
+      position: relative;
+      min-height: 400px;
+      overflow: hidden;
+    }
+
+    .embed-inner {
+      border-radius: 12px;
+      background: var(--surface);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .embed-frame {
+      width: 100%;
+      height: 95vh;
+      min-height: 520px;
+      border: none;
+      display: block;
+    }
+
+    @media (max-width: 600px) {
+      .cta-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .embed-frame {
+        height: 70vh;
+        min-height: 450px;
+      }
+    }
+  </style>
+</MainLayout2>

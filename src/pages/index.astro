@@ -1,16 +1,17 @@
 ---
 /*
   src/pages/index.astro
-  Stephen — sidebar layout inspired by the reference (left profile/nav, right hero)
+  Stephen — homepage using shared mainlayout2
 */
-const CONTACT_EMAIL = "stephen@example.com";
-const GITHUB_USERNAME = "stephen-github";
+
+import MainLayout2 from "../layouts/mainlayout2.astro";
 
 const SITE_TITLE = "Stephen";
 const SITE_DESCRIPTION = "Portfolio with a left sidebar profile and clean, editorial hero.";
 
 const HERO_HEADING_LINE1 = "I am...";
-const HERO_HEADING_LINE2 = "busy with unemployment";
+const HERO_HEADING_LINE2 = "Refining Macrodata at";
+const HERO_YETI_LINK = "https://eu.yeti.com/";
 const HERO_SUBTEXT = `Showcasing my projects and activities while looking for a job!`;
 
 const HERO_IMAGES: string[] = [
@@ -21,25 +22,27 @@ const HERO_IMAGES: string[] = [
   "/images/home/hero-6.jpg"
 ];
 
-// Latest update cards
 const LATEST_PROJECT = {
   href: "/projects/#latest",
   title: "New project title",
   desc: "Subtitle/quick description",
   thumb: "/images/home/project-thumb.jpg",
 };
+
 const LATEST_PHOTO = {
   href: "/photography/coffee/",
   title: "Coffee",
   desc: "Caffeine rituals & special brews.",
   thumb: "/images/photography/coffee/7.jpg",
 };
+
 const LATEST_TRAVEL = {
   href: "/travel/porto/",
   title: "Recent trip",
   desc: "Porto, Portugal",
   thumb: "/images/travel/porto/1.jpg",
 };
+
 const LATEST_THOUGHTS = {
   href: "/thoughts/#latest",
   title: "Latest thought",
@@ -47,293 +50,260 @@ const LATEST_THOUGHTS = {
   thumb: "/images/home/thoughts-thumb.jpg",
 };
 ---
-<html lang="en" data-theme="light">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{SITE_TITLE}</title>
-    <meta name="description" content={SITE_DESCRIPTION} />
-    <meta name="theme-color" content="#ffffff" />
-    <link rel="icon" href="/favicon.ico" />
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 
-    <style>
-      :root {
-        --bg: #ffffff;
-        --sidebar: #f3f5f8;
-        --text: #0f141b;
-        --muted: #6b7280;
-        --accent: #0a67ff;
-        --border: #e5e7eb;
-        --maxw: 1400px;
-        --sidebar-w: 270px;
-      }
-      * { box-sizing: border-box; }
-      html, body {
-        margin: 0; padding: 0;
-        background: var(--bg);
-        color: var(--text);
-        font: 16px/1.6 Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-      }
-      img { max-width: 100%; display: block; }
-      a { color: var(--accent); text-decoration: none; }
-      a:hover { text-decoration: underline; }
+<MainLayout2
+  title={SITE_TITLE}
+  description={SITE_DESCRIPTION}
+  activeNav="home"
+  pageTitle={`${HERO_HEADING_LINE1} ${HERO_HEADING_LINE2} YETI®`}
+  pageDescription={HERO_SUBTEXT}
+  wideHeader={true}
+>
+  <section class="hero">
+    <div>
+      <div class="updates">
+        <h2 class="section-label">Recent updates</h2>
 
-      .site { display: grid; grid-template-columns: 1fr; min-height: 100dvh; }
-      @media (min-width: 800px) { .site { grid-template-columns: var(--sidebar-w) 1fr; } }
+        <div class="cards">
+          <a class="card home-card" href={LATEST_PROJECT.href}>
+            <div class="kicker">Project</div>
+            {LATEST_PROJECT.thumb && <img class="thumb" src={LATEST_PROJECT.thumb} alt="" />}
+            <div class="title">{LATEST_PROJECT.title}</div>
+            <div class="desc">{LATEST_PROJECT.desc}</div>
+          </a>
 
-      /* Sidebar */
-      aside { background: var(--sidebar); border-right: 1px solid var(--border); }
-      .aside-inner {
-        position: sticky; top: 0; height: 100dvh;
-        display: grid; grid-template-rows: auto 1fr auto;
-        padding: 28px 22px; gap: 18px;
-        max-width: var(--sidebar-w); margin: 0 auto;
-      }
-      .avatar {
-        width: 160px; height: 160px; border-radius: 999px;
-        overflow: hidden; border: 2px solid #fff;
-        box-shadow: 0 6px 22px rgba(0,0,0,.06); margin: 0 auto;
-      }
-      .who { margin-top: 8px; text-align: center; }
-      .name { font: 700 1.35rem/1.2 "Playfair Display", Georgia, serif; color: #111827; }
-      .role { font-size: .9rem; color: var(--accent); display: inline-block; margin-top: 4px; }
-      .loc { color: var(--muted); font-size: .85rem; }
+          <a class="card home-card" href={LATEST_PHOTO.href}>
+            <div class="kicker">Photography</div>
+            {LATEST_PHOTO.thumb && <img class="thumb" src={LATEST_PHOTO.thumb} alt="" />}
+            <div class="title">{LATEST_PHOTO.title}</div>
+            <div class="desc">{LATEST_PHOTO.desc}</div>
+          </a>
 
-      .sidenav {
-        list-style: none; margin: 18px 0; padding: 0;
-        display: grid; gap: 10px;
-      }
-      .sidenav a { color: #0f141b; letter-spacing: .02em; font-weight: 600; }
-      .sidenav a.active, .sidenav a:hover { color: var(--accent); }
+          <a class="card home-card" href={LATEST_TRAVEL.href}>
+            <div class="kicker">Travel</div>
+            {LATEST_TRAVEL.thumb && <img class="thumb" src={LATEST_TRAVEL.thumb} alt="" />}
+            <div class="title">{LATEST_TRAVEL.title}</div>
+            <div class="desc">{LATEST_TRAVEL.desc}</div>
+          </a>
 
-      .copyright { color: var(--muted); font-size: .8rem; }
-
-      /* Main */
-      main { display: grid; align-content: start; }
-      .content{max-width: var(--maxw);margin-left: 0;margin-right: auto; padding: clamp(12px, 2vw, 28px); padding-left: clamp(12px, 2vw, 28px);}
-
-      .hero { display: grid; gap: 20px; align-items: start; }
-      @media (min-width: 1024px) { .hero { grid-template-columns: 1fr 1fr; gap: 24px; } }
-
-      .headline {
-        font-family: "Playfair Display", Georgia, serif;
-        font-size: clamp(2.4rem, 6vw, 4.6rem);
-        line-height: 1.05;
-        letter-spacing: -0.5px;
-        color: #111827;
-        margin: 0 0 4px;
-      }
-      .subtext { color: #374151; max-width: 52ch; margin: 20 0 6px; }
-
-      .heroimg {
-        aspect-ratio: 4 / 5; border-radius: 16px;
-        overflow: hidden; background: #e5e7eb;
-        object-fit: cover;
-      }
-
-      .avatar img {
-        width: 100%; height: 100%; object-fit: cover;
-        object-position: 50% 35%; image-orientation: from-image; display: block;
-      }
-      .mobile-top img {
-        width: 44px; height: 44px; object-fit: cover; image-orientation: from-image;
-      }
-
-      .mobile-top {
-        display: flex; align-items: center; gap: 12px;
-        padding: 14px; border-bottom: 1px solid var(--border);
-      }
-      .mobile-top .name { font-size: 1.15rem; }
-      @media (min-width: 800px) { .mobile-top { display: none; } }
-
-      /* --- Hero slider --- */
-      .slider { position: relative; overflow: hidden; border-radius: 16px; }
-      .slider-track { display: flex; will-change: transform; transition: transform .6s ease; }
-      .slider img.heroimg {
-        flex: 0 0 100%; width: 100%; aspect-ratio: 4 / 5;
-        object-fit: cover; background: #e5e7eb;
-      }
-      .slider .nav {
-        position: absolute; top: 50%; transform: translateY(-50%);
-        border: none; background: rgba(255,255,255,.9);
-        padding: 8px 12px; border-radius: 10px;
-        cursor: pointer; box-shadow: 0 6px 18px rgba(0,0,0,.12);
-      }
-      .slider .prev { left: 10px; } .slider .next { right: 10px; }
-
-      /* --- Recent updates --- */
-      .updates { margin-top: 20px; }
-      .updates h3 { margin: 0 0 10px; font-size: 1.05rem; color: #0f141b; letter-spacing: .02em; }
-      .cards {
-        display: grid;
-        gap: 16px;
-        grid-template-columns: repeat(2, 1fr);  /* 2x2 layout */
-        max-width: 80%;       /* keeps grid narrower */
-        margin-right: auto;   /* aligns left */
-      }
-      @media (max-width: 699px) {
-        .cards { grid-template-columns: 1fr; }
-      }
-      .card {
-        display: grid; gap: 8px;
-        border: 2px solid #111827;
-        border-radius: 12px;
-        padding: 12px;
-        color: inherit; text-decoration: none; background: #fff;
-      }
-      .card:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0,0,0,.06); text-decoration: none; }
-      .card .kicker { font-size: .85rem; color: #6b7280; }
-      .card .title { font-weight: 700; }
-      .thumb {
-        border: 2px solid #111827;
-        border-radius: 10px;
-        aspect-ratio: 16 / 9;
-        object-fit: cover;
-        width: 100%;
-        background: #f3f4f6;
-      }
-      .desc { color: #4b5563; font-size: .9rem; }
-      /* Fix mobile overlap: make the sidebar non-sticky and auto-height */
-      @media (max-width: 959px) {
-        aside {
-          border-right: none;
-          border-bottom: 1px solid var(--border); /* nice divider instead */
-        }
-        .aside-inner {
-          position: static;   /* was: sticky */
-          height: auto;       /* was: 100dvh */
-          padding: 16px;      /* a bit tighter on phones */
-        }
-      }
-    </style>
-  </head>
-
-  <body>
-    <div class="site">
-      <!-- Mobile compact header -->
-      <div class="mobile-top">
-        <img src="/images/home/portrait.jpg" alt="Stephen portrait" width="44" height="44" style="border-radius:999px;" />
-        <div><div class="name">Stephen</div></div>
+          <a class="card home-card" href={LATEST_THOUGHTS.href}>
+            <div class="kicker">Thoughts</div>
+            {LATEST_THOUGHTS.thumb && <img class="thumb" src={LATEST_THOUGHTS.thumb} alt="" />}
+            <div class="title">{LATEST_THOUGHTS.title}</div>
+            <div class="desc">{LATEST_THOUGHTS.desc}</div>
+          </a>
+        </div>
       </div>
-
-      <!-- Sidebar -->
-      <aside>
-        <div class="aside-inner">
-          <div>
-            <div class="avatar"><img src="/images/home/portrait.jpg" alt="Stephen portrait" /></div>
-            <div class="who">
-              <div class="name">Stephen</div>
-              <a class="role" href="/">Strategist & Aspiring Autodidact</a>
-              <div class="loc">Netherlands / United States</div>
-            </div>
-          </div>
-
-          <nav>
-            <ul class="sidenav">
-              <li><a class="active" href="/">Home</a></li>
-              <li><a href="/about/">About</a></li>
-              <li><a href="/education/">Education</a></li>
-              <li><a href="/experience/">Experience</a></li>
-              <li><a href="/projects/">Projects</a></li>
-              <li><a href="/photography/">Photography</a></li>
-              <li><a href="/travel/">Travel</a></li>
-              <li><a href="/thoughts/">Thoughts</a></li>
-              <li><a href={"mailto:" + CONTACT_EMAIL}>Contact</a></li>
-            </ul>
-          </nav>
-          <div class="copyright">© {new Date().getFullYear()} Stephen · <a href={"https://github.com/S2AW"} target="_blank" rel="noopener">GitHub</a></div>
-        </div>
-      </aside>
-
-      <!-- Main content / hero -->
-      <main>
-        <div class="content">
-          <section class="hero">
-            <div>
-              <h1 class="headline">{HERO_HEADING_LINE1}<br />{HERO_HEADING_LINE2}</h1>
-              <p class="subtext">{HERO_SUBTEXT}</p>
-
-              <div class="updates">
-                <h3>Recent updates</h3>
-                <div class="cards">
-                  <a class="card" href={LATEST_PROJECT.href}>
-                    <div class="kicker">Project</div>
-                    {LATEST_PROJECT.thumb && <img class="thumb" src={LATEST_PROJECT.thumb} alt="" />}
-                    <div class="title">{LATEST_PROJECT.title}</div>
-                    <div class="desc">{LATEST_PROJECT.desc}</div>
-                  </a>
-
-                  <a class="card" href={LATEST_PHOTO.href}>
-                    <div class="kicker">Photography</div>
-                    {LATEST_PHOTO.thumb && <img class="thumb" src={LATEST_PHOTO.thumb} alt="" />}
-                    <div class="title">{LATEST_PHOTO.title}</div>
-                    <div class="desc">{LATEST_PHOTO.desc}</div>
-                  </a>
-
-                  <a class="card" href={LATEST_TRAVEL.href}>
-                    <div class="kicker">Travel</div>
-                    {LATEST_TRAVEL.thumb && <img class="thumb" src={LATEST_TRAVEL.thumb} alt="" />}
-                    <div class="title">{LATEST_TRAVEL.title}</div>
-                    <div class="desc">{LATEST_TRAVEL.desc}</div>
-                  </a>
-
-                  <a class="card" href={LATEST_THOUGHTS.href}>
-                    <div class="kicker">Thoughts</div>
-                    {LATEST_THOUGHTS.thumb && <img class="thumb" src={LATEST_THOUGHTS.thumb} alt="" />}
-                    <div class="title">{LATEST_THOUGHTS.title}</div>
-                    <div class="desc">{LATEST_THOUGHTS.desc}</div>
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <!-- Hero slideshow -->
-            <div class="slider" id="heroSlider" data-images={JSON.stringify(HERO_IMAGES)}>
-              <div class="slider-track" id="sliderTrack">
-                {HERO_IMAGES.map((src, idx) => (
-                  <img class="heroimg" src={src} alt={"Hero image " + (idx + 1)} loading={idx === 0 ? "eager" : "lazy"} />
-                ))}
-              </div>
-              <button class="nav prev" type="button" aria-label="Previous">‹</button>
-              <button class="nav next" type="button" aria-label="Next">›</button>
-            </div>
-          </section>
-        </div>
-      </main>
     </div>
 
-    <!-- Slider logic -->
-    <script is:inline>
-      const slider = document.getElementById('heroSlider');
-      const track = document.getElementById('sliderTrack');
-      const prev = slider?.querySelector('.prev');
-      const next = slider?.querySelector('.next');
+    <div class="slider" id="heroSlider" data-images={JSON.stringify(HERO_IMAGES)}>
+      <div class="slider-track" id="sliderTrack">
+        {HERO_IMAGES.map((src, idx) => (
+          <img
+            class="heroimg"
+            src={src}
+            alt={"Hero image " + (idx + 1)}
+            loading={idx === 0 ? "eager" : "lazy"}
+          />
+        ))}
+      </div>
 
-      let imgs = [];
-      try { imgs = JSON.parse(slider?.dataset.images || '[]'); }
-      catch(e) { console.error('Failed to parse images:', e); }
+      <button class="nav prev" type="button" aria-label="Previous">‹</button>
+      <button class="nav next" type="button" aria-label="Next">›</button>
+    </div>
+  </section>
 
-      let i = 0;
-      let timer = null;
+  <style>
+    .hero {
+      display: grid;
+      gap: 20px;
+      align-items: start;
+    }
 
-      function show(n) {
-        if (!imgs.length) return;
-        i = (n + imgs.length) % imgs.length;
-        track.style.transform = `translateX(-${i * 100}%)`;
+    @media (min-width: 1024px) {
+      .hero {
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
       }
+    }
 
-      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      function start() { if (!reduce) { stop(); timer = setInterval(() => show(i + 1), 6000); } }
-      function stop() { if (timer) { clearInterval(timer); timer = null; } }
+    .section-label {
+      margin: 0 0 10px;
+      font-size: 1.05rem;
+      line-height: 1.2;
+      color: var(--title);
+      letter-spacing: 0.02em;
+      font-weight: 700;
+    }
 
-      prev?.addEventListener('click', () => { show(i - 1); start(); });
-      next?.addEventListener('click', () => { show(i + 1); start(); });
-      slider?.addEventListener('mouseenter', stop);
-      slider?.addEventListener('mouseleave', start);
+    .heroimg {
+      aspect-ratio: 4 / 5;
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--surface-muted);
+      object-fit: cover;
+    }
 
-      show(0);
+    .slider {
+      position: relative;
+      overflow: hidden;
+      border-radius: 16px;
+    }
+
+    .slider-track {
+      display: flex;
+      will-change: transform;
+      transition: transform 0.6s ease;
+    }
+
+    .slider img.heroimg {
+      flex: 0 0 100%;
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+      background: var(--surface-muted);
+    }
+
+    .slider .nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 1px solid var(--border);
+      background: color-mix(in srgb, var(--surface) 88%, transparent);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: var(--shadow-md);
+    }
+
+    .slider .prev {
+      left: 10px;
+    }
+
+    .slider .next {
+      right: 10px;
+    }
+
+    .updates {
+      margin-top: 0;
+    }
+
+    .cards {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(2, 1fr);
+      max-width: 80%;
+      margin-right: auto;
+    }
+
+    @media (max-width: 699px) {
+      .cards {
+        grid-template-columns: 1fr;
+        max-width: none;
+      }
+    }
+
+    .home-card {
+      display: grid;
+      gap: 8px;
+      padding: 12px;
+      color: inherit;
+      text-decoration: none;
+      background: var(--surface);
+      border: 2px solid var(--card-border);
+      border-radius: var(--radius-md);
+      transition:
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast),
+        background-color var(--transition-fast),
+        border-color var(--transition-fast),
+        color var(--transition-fast);
+    }
+
+    .home-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+      text-decoration: none;
+    }
+
+    .home-card .kicker {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .home-card .title {
+      font-weight: 700;
+      color: var(--title);
+    }
+
+    .thumb {
+      border: 2px solid var(--card-border);
+      border-radius: 10px;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      width: 100%;
+      background: var(--surface-muted);
+    }
+
+    .desc {
+      color: var(--text-soft);
+      font-size: 0.9rem;
+    }
+  </style>
+
+  <script is:inline>
+    const slider = document.getElementById("heroSlider");
+    const track = document.getElementById("sliderTrack");
+    const prev = slider?.querySelector(".prev");
+    const next = slider?.querySelector(".next");
+
+    let imgs = [];
+    try {
+      imgs = JSON.parse(slider?.dataset.images || "[]");
+    } catch (e) {
+      console.error("Failed to parse images:", e);
+    }
+
+    let i = 0;
+    let timer = null;
+
+    function show(n) {
+      if (!imgs.length || !track) return;
+      i = (n + imgs.length) % imgs.length;
+      track.style.transform = `translateX(-${i * 100}%)`;
+    }
+
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    function start() {
+      if (!reduce) {
+        stop();
+        timer = setInterval(() => show(i + 1), 6000);
+      }
+    }
+
+    function stop() {
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+    }
+
+    prev?.addEventListener("click", () => {
+      show(i - 1);
       start();
-    </script>
-  </body>
-</html>
+    });
+
+    next?.addEventListener("click", () => {
+      show(i + 1);
+      start();
+    });
+
+    slider?.addEventListener("mouseenter", stop);
+    slider?.addEventListener("mouseleave", start);
+
+    show(0);
+    start();
+  </script>
+</MainLayout2>

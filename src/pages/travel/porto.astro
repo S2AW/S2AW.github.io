@@ -1,960 +1,777 @@
 ---
+import MainLayout2 from "../../layouts/mainlayout2.astro";
+
 const SITE_TITLE = "Stephen — Porto, Portugal";
 const SITE_DESCRIPTION = "Personal travel notes and photos from a week in Porto, Portugal.";
-
-const NAV = [
-  { label: "Home", href: "/" },
-  { label: "About", href: "/about/" },
-  { label: "Education", href: "/education/" },
-  { label: "Experience", href: "/experience/" },
-  { label: "Projects", href: "/projects/" },
-  { label: "Photography", href: "/photography/" },
-  { label: "Travel", href: "/travel/", active: true },
-  { label: "Thoughts", href: "/thoughts/" },
-  { label: "Contact", href: "mailto:stephen@example.com" },
-];
 ---
 
-<html lang="en" data-theme="light">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{SITE_TITLE}</title>
-    <meta name="description" content={SITE_DESCRIPTION} />
-    <link rel="icon" href="/favicon.ico" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;700&display=swap"
-      rel="stylesheet"
-    />
-
-    <style>
-      :root {
-        --bg:#fff; --sidebar:#f3f5f8; --text:#0f141b; --muted:#6b7280; --accent:#0a67ff;
-        --border:#e5e7eb; --maxw:1400px; --sidebar-w:270px;
-      }
-
-      *{box-sizing:border-box}
-      html,body{
-        margin:0;
-        padding:0;
-        background:var(--bg);
-        color:var(--text);
-        font:16px/1.6 Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
-      }
-      img{max-width:100%;display:block}
-      a{color:var(--accent);text-decoration:none}
-      a:hover{text-decoration:underline}
-
-      .site{display:grid;grid-template-columns:1fr;min-height:100dvh}
-      @media(min-width:800px){
-        .site{grid-template-columns:var(--sidebar-w) 1fr}
-      }
-
-      aside{
-        background:var(--sidebar);
-        border-right:1px solid var(--border);
-      }
-      .aside-inner{
-        position:sticky;
-        top:0;
-        height:100dvh;
-        display:grid;
-        grid-template-rows:auto 1fr auto;
-        padding:28px 22px;
-        gap:18px;
-        max-width:var(--sidebar-w);
-        margin:0 auto;
-      }
-      .avatar{
-        width:160px;
-        height:160px;
-        border-radius:999px;
-        overflow:hidden;
-        border:2px solid #fff;
-        box-shadow:0 6px 22px rgba(0,0,0,.06);
-        margin:0 auto;
-      }
-      .avatar img{
-        width:100%;
-        height:100%;
-        object-fit:cover;
-        object-position:50% 35%;
-      }
-      .who{text-align:center;margin-top:8px}
-      .name{
-        font:700 1.35rem/1.2 "Playfair Display",Georgia,serif;
-        color:#111827;
-      }
-      .role{font-size:.9rem;color:var(--accent)}
-      .loc{color:var(--muted);font-size:.85rem}
-
-      .sidenav{
-        list-style:none;
-        margin:18px 0;
-        padding:0;
-        display:grid;
-        gap:10px;
-      }
-      .sidenav a{
-        color:#0f141b;
-        font-weight:600;
-      }
-      .sidenav a.active,
-      .sidenav a:hover{
-        color:var(--accent);
-      }
-
-      .copyright{
-        color:var(--muted);
-        font-size:.8rem;
-      }
-
-      main{
-        display:grid;
-        align-content:start;
-      }
-      .content{
-        width:100%;
-        max-width:none;
-        margin:0;
-        padding: clamp(12px, 2vw, 28px);
-        padding-left: clamp(12px, 2vw, 28px);
-      }
-
-      .breadcrumb{
-        font-size:.85rem;
-        color:var(--muted);
-        margin-bottom:2px;
-      }
-      .breadcrumb a{
-        color:var(--muted);
-      }
-      .breadcrumb a:hover{
-        color:var(--accent);
-      }
-
-      .headline{
-        font-family:"Playfair Display",Georgia,serif;
-        font-size:clamp(2.4rem,4.2vw,3.4rem);
-        line-height:1.08;
-        margin:8px 0 4px;
-      }
-      .subtext{
-        color:#374151;
-        margin:4px 0 18px;
-        font-size:1.03rem;
-      }
-
-      .hero-layout{
-        display:grid;
-        gap:18px;
-        grid-template-columns:1fr;
-        margin-top:12px;
-        margin-bottom:26px;
-      }
-      @media(min-width:900px){
-        .hero-layout{
-          grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);
-          align-items:start;
-        }
-      }
-
-      .hero-image-wrap{
-        border-radius:16px;
-        overflow:hidden;
-        border:none;
-        background:none;
-        padding:0;
-      }
-
-      .hero-image{
-        width:100%;
-        height:100%;
-        object-fit:cover;
-        aspect-ratio:16/9;
-      }
-
-      .hero-meta{
-        border-radius:16px;
-        border:1px solid var(--border);
-        background:#fff;
-        padding:14px 16px;
-      }
-      .hero-meta h2{
-        margin:0 0 10px;
-        font-family:"Playfair Display",Georgia,serif;
-        font-size:1.2rem;
-      }
-      .meta-grid{
-        display:grid;
-        grid-template-columns:repeat(2,minmax(0,1fr));
-        gap:10px;
-        font-size:.9rem;
-      }
-      .meta-label{
-        color:var(--muted);
-        font-size:.8rem;
-        text-transform:uppercase;
-        letter-spacing:.05em;
-      }
-      .meta-value{
-        font-weight:500;
-      }
-
-      .section{
-        margin-bottom:24px;
-      }
-      .section-wide{
-        margin-bottom:24px;
-      }
-      .section h2{
-        font-family:"Playfair Display",Georgia,serif;
-        font-size:1.5rem;
-        margin:0 0 8px;
-        color:#111827;
-      }
-      .section p{
-        margin:0 0 10px;
-      }
-      .section ul{
-        margin:6px 0 10px 1.2rem;
-        padding:0;
-      }
-      .section li{
-        margin-bottom:4px;
-      }
-
-      .two-column{
-        display:grid;
-        grid-template-columns:1fr;
-        gap:18px;
-      }
-
-      .note-list{
-        list-style:disc;
-        margin:6px 0 0 1.2rem;
-        padding:0;
-      }
-
-      .callout{
-        border-radius:12px;
-        border:1px dashed #cbd5e1;
-        padding:10px 12px;
-        background:#f9fafb;
-        font-size:.92rem;
-      }
-
-      /* ============================= */
-      /* IMAGE SIZING WITH --img-scale */
-      /* ============================= */
-
-      /* Generic image wrapper – used everywhere */
-      .img-wrap{
-        --img-scale: 0.8;           /* default, overridden inline */
-        display: flex;
-        flex-direction: column;
-        align-items: center;        /* centers the scaled image in the grid cell */
-      }
-
-      /* image scales relative to the grid cell width */
-      .img-wrap img{
-        width: calc(100% * var(--img-scale));
-        max-width: 100%;
-        height: auto;
-        display: block;
-        border-radius: 14px;
-        border: 1px solid var(--border);
-        background:#f3f4f6;
-        object-fit: cover;
-      }
-
-      /* caption is forced to the same scaled width as the image */
-      .img-wrap .caption{
-        width: calc(100% * var(--img-scale));
-        font-size: .85rem;
-        color: var(--muted);
-        margin-top: 6px;
-        text-align: left;
-        overflow-wrap: anywhere;
-      }
-
-      /* Single-image blocks */
-      .photo-block {
-        margin: 22px 0;
-      }
-
-      .caption {
-        font-size: .85rem;
-        color: var(--muted);
-        margin-top: 6px;
-        max-width: 900px;
-        margin-left: auto;
-        margin-right: auto;
-      }
-
-      .photo-block .img-wrap .caption{
-        width: calc(100% * var(--img-scale)) !important;
-        max-width: none !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
-        text-align: left;
-        overflow-wrap: anywhere;
-      }
-
-      /* Side-by-side rows */
-      .photo-row {
-        display: grid;
-        gap: 16px;
-        margin: 26px 0;
-      }
-
-      .photo-row--2 {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .photo-row--3 {
-        grid-template-columns: repeat(3, 1fr);
-      }
-
-      @media(max-width:959px){
-        aside{
-          border-right:none;
-          border-bottom:1px solid var(--border);
-        }
-        .aside-inner{
-          position:static;
-          height:auto;
-          padding:16px;
-        }
-        .photo-row{
-          grid-template-columns:1fr !important;
-        }
-      }
-    </style>
-  </head>
-
-  <body>
-    <div class="site">
-      <aside>
-        <div class="aside-inner">
-          <div>
-            <div class="avatar">
-              <img src="/images/home/portrait.jpg" alt="Stephen portrait" />
-            </div>
-            <div class="who">
-              <div class="name">Stephen</div>
-              <a class="role" href="/">Strategist &amp; Aspiring Autodidact</a>
-              <div class="loc">Netherlands / United States</div>
-            </div>
-          </div>
-
-          <nav>
-            <ul class="sidenav">
-              {NAV.map((n) => (
-                <li>
-                  <a class={n.active ? "active" : ""} href={n.href}>
-                    {n.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          <div class="copyright">
-            © {new Date().getFullYear()} Stephen ·{" "}
-            <a href="https://github.com/S2AW" target="_blank" rel="noopener">
-              GitHub
-            </a>
-          </div>
-        </div>
-      </aside>
-
-      <main>
-        <div class="content">
-          <div class="breadcrumb">
-            <a href="/travel/">Travel</a> / Porto, Portugal
-          </div>
-
-          <h1 class="headline">Porto, Portugal</h1>
-          <p class="subtext">
-            A week in a historic, industrial port city with strong wine, sweeping river views, and an emerging tourism scene that still feels distinctly local.
-          </p>
-
-          <section class="hero-layout">
-            <div class="hero-image-wrap">
-              <!-- 1 – overlooking porto (cover) -->
-              <div class="img-wrap" style="--img-scale:1.0;">
-                <img
-                  class="hero-image"
-                  src="/images/travel/porto/1.jpg"
-                  alt="Overlooking the city of Porto and the Douro River"
-                />
-              </div>
-            </div>
-            <aside class="hero-meta">
-              <h2>Trip Snapshot</h2>
-              <div class="meta-grid">
-                <div>
-                  <div class="meta-label">Visited</div>
-                  <div class="meta-value">July, ~1 week</div>
-                </div>
-                <div>
-                  <div class="meta-label">From</div>
-                  <div class="meta-value">Amsterdam (AMS → OPO)</div>
-                </div>
-                <div>
-                  <div class="meta-label">Region</div>
-                  <div class="meta-value">Iberian Peninsula</div>
-                </div>
-                <div>
-                  <div class="meta-label">Why Go</div>
-                  <div class="meta-value">Wine, river, sunsets, value</div>
-                </div>
-              </div>
-            </aside>
-          </section>
-
-          <!-- Overview -->
-          <section class="section">
-            <h2>Overview</h2>
-            <p>
-              I visited Porto, Portugal in July for about a week. I flew from Amsterdam Schiphol and landed at Francisco Sá Carneiro Airport (OPO). Porto sits on the Iberian Peninsula and often flies under the radar relative to nearby destinations in Spain, southern Portugal, France, or Italy. I initially visited simply to add Portugal to my travel map, but I found a city offering strong tourist value: striking views, excellent port wine, historic buildings, scenic river cruises, and prices lower than many Western European hotspots.
-            </p>
-            <p>
-              Porto is Portugal’s second-largest city and the capital of the northern region, functioning as a long-standing industrial and commercial center. The city feels industrial and aging, but with a visible student population and a tourism sector that is clearly growing. Architecturally, it ranges from medieval to modern, spanning numerous styles. Much of Porto is built on high ground overlooking the northern bank of the Douro River estuary, and its historic center was designated a UNESCO World Heritage Site in 1996.
-            </p>
-            <p>
-              The overall vibe is welcoming and relaxed, with high English proficiency, affordable rideshares, and impressive sunsets over the Atlantic.
-            </p>
-
-            <!-- 2 & 3 – general understanding porto -->
-            <div class="photo-row photo-row--2">
-              <div class="img-wrap" style="--img-scale:0.5;">
-                <img
-                  src="/images/travel/porto/2.jpg"
-                  alt="Castle in Porto flying the Portuguese flag"
-                />
-                <div class="caption">Castle in Porto flying the Portuguese flag.</div>
-              </div>
-              <div class="img-wrap" style="--img-scale:0.5;">
-                <img
-                  src="/images/travel/porto/3.jpg"
-                  alt="Cityscape of Porto"
-                />
-                <div class="caption">Overlooking Porto's cityscape.</div>
-              </div>
-            </div>
-
-            
-          </section>
-
-          <!-- Understand -->
-          <section class="section">
-            <h2>Understand</h2>
-            <p>
-              Porto reflects an important maritime legacy. 
-              Its roots trace back to the Age of Discovery, when the city embodied grit, commerce, and shipbuilding rather than courtly prestige. 
-              That legacy still shows: Porto historically supplied fleets, merchants, and labor, earning a reputation as a working city shaped more by trade than nobility.
-            </p>
-            <p>
-              The culture felt warm, friendly, and Mediterranean-influenced despite the Atlantic location. 
-              Locals often describe the city as proud, resilient, and no-nonsense an identity reinforced by its history of resistance and its nickname, "Cidade Invicta" (the undefeated city). 
-              There is a palpable student energy, and street-performing university groups add character and movement to public spaces.
-            </p>
-            <p>
-              Languages encountered included Portuguese, Spanish, and English. 
-              English-speaking visitors should be able to navigate comfortably.
-            </p>
-            <p>
-              Weather in July was warm and sunny, roughly 21 to 26°C (70 to 80°F), with no rain and mostly clear skies. 
-              Despite the Atlantic influence, conditions were ideal for vineyard tours, sunsets, and river cruises. 
-              Summer feels like the optimal season to experience Porto at its most relaxed and visually striking.
-            </p>
-            
-          </section>
-
-          <!-- Getting in & Getting Around -->
-          <section class="section">
-            <h2>Gettting In &amp; Getting Around</h2>
-            <p>
-              I flew into Francisco Sá Carneiro Airport (OPO). 
-              It was smaller than expected but easy to navigate. 
-              Arrival was smooth for an experienced traveler, with no sense of congestion despite the airport’s growing role as Portugal’s secondary international hub. 
-              Located roughly 15 km from the city center, it handles a high volume of passengers relative to Porto’s size, driven by increasing tourist demand and the region’s economic importance. 
-              I took an Uber from the airport; rideshares in Porto were significantly cheaper than in many Western European cities, making airport transfers straightforward and cost-effective. 
-              The Metro line E connects the airport to the city center.
-            </p>
-            <p>
-              I relied mainly on walking and Uber around tourist areas. 
-              Navigation apps make walking straightforward, but the hills are not trivial. 
-              Much of Porto is built into steep, uneven terrain overlooking the Douro River, making it physically demanding to explore on foot but visually rewarding. 
-              Even if you are relatively fit, expect some effort. 
-              Mobility-limited travelers should factor in the gradients and prioritize transit options.
-            </p>
-            <p>
-              Driving would be difficult and frustrating in central Porto, especially in tourist-heavy neighborhoods with narrow streets and irregular layouts, so I avoided renting a car altogether. 
-              Walking works well for short distances despite the elevation, and rideshare filled the gaps efficiently and affordably.
-            </p>
-            <p>
-              Public transit options exist, including trams and a modern light-rail system operated by Porto Metro, but I used them sparingly. 
-              The metro is efficient for longer point-to-point trips, though it does not serve every tourist area equally, and announcements are primarily in Portuguese.
-            </p>  
-
-            <p>
-              Overall, a combination of walking and rideshare was the most convenient way to get around, balancing flexibility with the city’s challenging terrain.
-            </p>
-            <p>
-              Depending on your trip itinerary and interests, the Porto Card may be worthwile.  
-              <a href="https://visitporto.travel/en-GB/porto-card" target="_blank" rel="noopener noreferrer">
-                Porto.CARD
-              </a>
-               is Porto’s official city pass, providing free access to selected museums and public transport as well as discounts on certain attractions, services, monuments, and tours for 1-4 days.
-            </p>
-
-
-            <!-- 4, 5, 6 – getting around challenges -->
-            <div class="photo-row photo-row--3">
-              <div class="img-wrap" style="--img-scale:0.7;">
-                <img
-                  src="/images/travel/porto/4.jpg"
-                  alt="Crowded streets in central Porto"
-                />
-                <div class="caption">Crowded streets in central Porto.</div>
-              </div>
-              <div class="img-wrap" style="--img-scale:0.7;">
-                <img
-                  src="/images/travel/porto/5.jpg"
-                  alt="Steep stairs in Porto"
-                />
-                <div class="caption">Steep stairs showing how vertical the city can be.</div>
-              </div>
-              <div class="img-wrap" style="--img-scale:0.7;">
-                <img
-                  src="/images/travel/porto/6.jpg"
-                  alt="Busy pedestrian areas with shops and cafes"
-                />
-                <div class="caption">Busy pedestrian areas with shops and cafes.</div>
-              </div>
-            </div>
-
-            
-          </section>
-
-          <!-- See & Do -->
-          <section class="section">
-            <h2>See &amp; Do</h2>
-
-            <!-- cristal palace gardens -->
-            <p>
-              <a href="https://ambiente.cm-porto.pt/parques-e-jardins/jardins-do-palacio-de-cristal" target="_blank" rel="noopener noreferrer">
-                <strong>Jardins do Palácio de Cristal</strong>
-              </a>
-               - A large public garden and park in Porto, known for its beautifully landscaped grounds and sweeping panoramic views over the Douro River. 
-              One of the city’s most popular green spaces.
-              I only spent about an hour here during a longer walk and immediately wished I had planned more time. 
-              The gardens were stunning, the views of Porto’s bridges were spectacular, the peacocks were endlessly entertaining, and the fact that it was all free made it even better. 
-              If I were to redo the trip, I would grab lunch from a nearby café or market and have a picnic here. 
-              This felt like a true must-see.
-            </p>
-
-            <div class="photo-row photo-row--3">
-              <div class="img-wrap" style="--img-scale:0.56;">
-                <img
-                  src="/images/travel/porto/7.jpg"
-                  alt="Terrace in the gardens overlooking the Douro"
-                />
-                <div class="caption">Terrace in the gardens overlooking the Douro.</div>
-              </div>
-              <div class="img-wrap" style="--img-scale:1.0;">
-                <img
-                  src="/images/travel/porto/8.jpg"
-                  alt="Flowers in bloom inside the gardens"
-                />
-                <div class="caption">Flowers in bloom inside the gardens.</div>
-              </div>
-              <div class="img-wrap" style="--img-scale:0.56;">
-                <img
-                  src="/images/travel/porto/9.jpg"
-                  alt="Peacock wandering through the grounds"
-                />
-                <div class="caption">Peacock wandering through the grounds.</div>
-              </div>
-            </div>
-
-            <!-- Porto Cathedral -->
-            <p>
-              <a href="https://www.diocese-porto.pt/pt/catedral-do-porto/" target="_blank" rel="noopener noreferrer">
-                <strong>Sé do Porto (Porto Cathedral)</strong>
-              </a>
-               - One of Porto’s oldest and most significant monuments, with construction beginning in the 12th century. 
-               Located on a hilltop overlooking the old city and the Douro River, it features a striking Gothic cloister adorned with traditional blue-and-white azulejo tiles.
-               Porto is filled with churches, many of which charge an entry fee, and after a while they can start to blend together. 
-               If you only choose one, this should be it. 
-               Sé do Porto offers not just ornate relics, but also tiled cloisters, multiple levels to explore, a pavilion, and an open square outside with excellent city views. 
-               Many churches are worth visiting, but this one stood out the most.
-            </p>
-            <div class="photo-row photo-row--2">
-              <div class="img-wrap" style="--img-scale:0.5;">
-                <img
-                  src="/images/travel/porto/10.jpg"
-                  alt="Blue-and-White azulejo tiles"
-                />
-                <div class="caption">Blue-and-White azulejo tiles.</div>
-              </div>
-              <div class="img-wrap" style="--img-scale:0.50;">
-                <img
-                  src="/images/travel/porto/11.jpg"
-                  alt="Altar area in the cathedral"
-                />
-                <div class="caption">Altar area in the cathedral.</div>
-              </div>
-            </div>
-
-            <!-- Mercado do Bolhão -->
-            <p>
-              <a href="https://mercadobolhao.pt/en/" target="_blank" rel="noopener noreferrer">
-                <strong>Mercado do Bolhão</strong>
-              </a>
-               - Porto’s most famous traditional market, opened in 1914. 
-               Known for fresh produce, fish, meat, flowers, and a wide variety of traditional Portuguese foods.
-               The vendors reminded me of a Mediterranean take on Reading Terminal Market—fruit, fish, meat, smoothies, candy, baked goods, and more packed into a lively space. 
-               It is a great place to wander and pick up breakfast, lunch, or a midday snack. 
-               Just be aware that there are very few places to sit or even stand and eat within the market.
-            </p>
-            <div class="photo-row photo-row--2">
-              <div class="img-wrap" style="--img-scale:0.5;">
-                <img
-                  src="/images/travel/porto/12.jpg"
-                  alt="Entrance to the market square"
-                />
-                <div class="caption">Entrance to the market square</div>
-              </div>
-              <div class="img-wrap" style="--img-scale:0.50;">
-                <img
-                  src="/images/travel/porto/13.jpg"
-                  alt="Fresh fruit and produce"
-                />
-                <div class="caption">Fresh fruit and produce.</div>
-              </div>
-            </div>
-
-            <!-- Serralves Museum Gardens -->
-            <p>
-              <a href="https://www.serralves.pt/" target="_blank" rel="noopener noreferrer">
-                <strong>Serralves Museum Gardens</strong>
-              </a>
-              - Established in 1989 as a non-profit cultural foundation, Serralves combines a contemporary art museum, expansive landscaped gardens, and the historic Casa de Serralves.
-              This was easily the strangest stop of the trip, mostly because I didn’t quite know what to expect. 
-              I was a bit surprised by the entry fee (higher than anticipated), though not enough to stop me from going in. 
-              Inside, you move between beautiful gardens, modern art installations, and even a small farm or ranch. 
-              It can be jarring at times, like encountering giant modern sculptures in front of an otherwise serene pool. 
-              It is also a bit of a journey outside Porto proper. 
-              I took an Uber there and walked back along the coast through Foz, which was long but nice. 
-              Worth visiting if you have extra time, but not a must-see.
-            </p>
-
-            <div class="photo-row photo-row--2">
-              <div class="img-wrap" style="--img-scale:0.5;">
-                <img
-                  src="/images/travel/porto/14.jpg"
-                  alt="Pink House and monument"
-                />
-                <div class="caption">Pink House and monument.</div>
-              </div>
-              <div class="img-wrap" style="--img-scale:0.5;">
-                <img
-                  src="/images/travel/porto/15.jpg"
-                  alt="Flower and bee from the Museum gardens"
-                />
-                <div class="caption">Flower and bee from the Museum gardens.</div>
-              </div>
-            </div>
-
-            <!-- Stock Palace --> 
-            <p>
-              <a href="https://palaciodabolsa.com/en/intro/" target="_blank" rel="noopener noreferrer">
-                <strong>Palácio da Bolsa (Stock Exchange Palace)</strong>
-              </a>
-              - A 19th-century building in Porto’s historic center, originally constructed to house the city’s Commercial Association. 
-              It served as Porto’s stock exchange and commercial court and is renowned for its lavish interiors, especially the Arab Room inspired by Moorish design. 
-              Still used today for official ceremonies, conferences, and cultural events.
-              This was one of my favorite visits. 
-              The palace is stunning, rich with history, and I was genuinely disappointed when the guided tour ended. 
-              I wanted more time to wander the halls, learn about the building's evolving role through time, and better understand the events that took place here. 
-              Porto’s seafaring, mercantile, and industrial history all seem to converge in this building. 
-              Tours are scheduled in various languages at various times, so make sure to book in advance.
-              This is absolutely a must-see.
-            </p>
-
-            <div class="photo-row photo-row--2">
-              <div class="img-wrap" style="--img-scale:1.0;">
-                <img
-                  src="/images/travel/porto/16.jpg"
-                  alt="Stairs inside the Porto stock palace"
-                />
-                <div class="caption">Staircase inside Palácio da Bolsa.</div>
-              </div>
-              <div class="img-wrap" style="--img-scale:0.57;">
-                <img
-                  src="/images/travel/porto/17.jpg"
-                  alt="Golden room in the Porto stock palace"
-                />
-                <div class="caption">The golden room of the Stock Palace.</div>
-              </div>
-            </div>
-
-            <!-- Foz do Douro -->
-            <p>
-              <a href="https://en.wikipedia.org/wiki/Foz_do_Douro" target="_blank" rel="noopener noreferrer">
-                <strong>Foz do Douro</strong>
-              </a>
-               - A coastal district where the Douro River meets the Atlantic Ocean. 
-               Known for its beaches, seaside promenades, cafés, restaurants, and bars. 
-               One of Porto’s most scenic areas, especially at sunset and during dramatic ocean swells.
-               While it isn’t a single site or monument you would typically see pinned on a map, it is an area well worth exploring. 
-               I recommend setting aside an afternoon to walk from Porto’s historic center out to the Atlantic along this route. 
-               I made the walk, picked up drinks and appetizers at a few of the restaurants along the way, and ended the evening with a dinner at one of the beach bars to watch the spectacular sunset (see bottom of page).
-
-            </p>
-            <div class="photo-row photo-row--2">
-              <div class="img-wrap" style="--img-scale:1.0;">
-                <img
-                  src="/images/travel/porto/18.jpg"
-                  alt="Atlantic coast along the Foz"
-                />
-                <div class="caption">Atlantic coast along the Foz.</div>
-              </div>
-              <div class="img-wrap" style="--img-scale:0.57;">
-                <img
-                  src="/images/travel/porto/19.jpg"
-                  alt="Foz do Douro walkway"
-                />
-                <div class="caption">Foz do Douro walkway</div>
-              </div>
-            </div>
-
-            <!-- Douro Wine Country Tour --> 
-            <p>
-              <a href="https://www.getyourguide.com/porto-l151/from-porto-2-wine-regions-farm-to-table-lunch-boat-t672568/" target="_blank" rel="noopener noreferrer">
-                <strong>Douro Wine Country Tour</strong>
-              </a>
-              - One of the world’s oldest demarcated wine regions and a major wine-producing area in northern Portugal. 
-              Tours typically include visits to traditional wine estates, tastings (including Port wine), and scenic views of terraced vineyards along the Douro River.
-              This was a long day, about eight hours, but easily the highlight of the trip. 
-              The tour was led by a young Porto local trying to establish himself in the tourism industry and he did a phenomenal job.  
-              He delivered the whole tour in English and kept the long driving stretches informative and engaging. 
-              We traveled far upstream into the mountains and made three stops. 
-              The first was a smaller, modern winery focused on organic and efficient production, where we sampled several wines. 
-              The second stop involved boarding boats in a small town and cruising past vineyards while enjoying wine onboard. 
-              The final stop was at a large, traditional winery, where we were treated to dinner and an impressive selection of wines, including an excellent vintage Port. 
-              This was the best experience of the trip.
-            </p>
-
-            <div class="photo-row photo-row--2">
-              <div class="img-wrap" style="--img-scale:1.0;">
-                <img
-                  src="/images/travel/porto/20.jpg"
-                  alt="Winery in the uplands of the Douro Valley"
-                />
-                <div class="caption">Winery in the uplands of the Douro Valley.</div>
-              </div>
-              <div class="img-wrap" style="--img-scale:0.57;">
-                <img
-                  src="/images/travel/porto/21.jpg"
-                  alt="Rows of grapes at a Douro Valley winery"
-                />
-                <div class="caption">Rows of grapes running down the Douro hillside .</div>
-              </div>
-            </div>
-
-            <!-- Douro River Cruise -->
-            <p>
-              <a href="https://www.viator.com/en-AU/tours/Porto/Private-Cruise-on-the-Douro-River-with-Tapas-and-Port-Wine/d26879-356132P3" target="_blank" rel="noopener noreferrer">
-                <strong>Douro River Cruise</strong>
-              </a>
-              - Short, scenic boat cruises within Porto that focus on the city rather than the upriver wine valley. 
-              These relaxed trips highlight the Ribeira waterfront, wine cellars of Vila Nova de Gaia, historic landmarks along the riverbanks, and Porto’s iconic bridges.
-              There are many operators offering similar routes. 
-              My wife and I opted for a private boat, which meant a modern motorboat instead of a traditional vessel, but also a private guide and a charcuterie board prepared by our hosts. 
-              The cruise lasted about an hour and was relaxed and enjoyable. 
-              Since it takes place on the river, the water is calm and seasickness isn’t a concern. 
-              Just be mindful of the pickup location, as some docks are farther from the main areas than others.
-            </p>
-            <div class="img-wrap" style="--img-scale:0.50;">
-                  <img
-                    src="/images/travel/porto/22.jpg"
-                    alt="Porto riverfront with restaurants and boats"
-                  />
-                  <div class="caption">Riverside restaurants and boats.</div>
-                </div>
-
-          </section>
-
-          <section class="two-column section-wide">
-            <div class="section">
-              <h2>Food &amp; Drink</h2>
-              <p>
-                Meals in Porto are built around fresh, local ingredients and a strong connection to the Atlantic, with seafood, vegetables, fruits, and whole grains forming the backbone of the cuisine, alongside familiar staples like pork, rice, legumes, and potatoes. 
-                The city has quietly built a reputation as one of the best places to eat in Portugal.
-              </p>
-
-              <p>
-                Some of the most enjoyable meals are found in small, family-run restaurants in and around the Ribeira and throughout the old city, where locals eat daily. 
-                These places tend to be relaxed, welcoming, and focused on generous portions rather than presentation. 
-                Space is often tight, which sometimes means sharing tables, but that only adds to the atmosphere. 
-                Ordering the <i>prato do dia</i> (dish of the day) or simply following the waiter’s recommendation is usually the best way to experience a well-prepared, satisfying meal at a reasonable price.
-              </p>
-
-              <p>
-                Everyday food is just as important here. 
-                Porto is filled with bakeries and pastry shops that double as neighborhood cafés, serving inexpensive pastries, espresso, and simple sandwiches.
-              </p>
-
-              <p>
-                Try a francesinha, ideally somewhere locals actually eat rather than the main riverfront strip. 
-                The waterfront is scenic but comes with predictable markups. 
-                Port wine is exceptional in Porto, and much of it never leaves Europe. 
-                Serious wine enthusiasts are missing out if they skip Porto and the Douro Valley.
-              </p>
-
-              <p>
-                When I travel, I usually rely on Google Maps to scout restaurants, checking menus and reviews ahead of time. 
-                Other times, I decide on the spot, choosing a place simply because the location feels right, the room looks inviting, or the menu catches my eye. 
-                Food preferences are deeply subjective, but if you’d like a few recommendations:
-              </p>
-
-              <p>
-                <a href="https://mercadobolhao.pt/en/" target="_blank" rel="noopener noreferrer">
-                  <strong>Mercado do Bolhão</strong>
-                </a>
-                - Mentioned above as Porto’s most famous traditional market.
-              </p>
-
-              <p>
-                <a href="https://www.google.com/maps/place/Taberna+do+Doutor/@41.1508604,-8.6067049,19z/data=!3m1!4b1!4m6!3m5!1s0xd2464fa966862bd:0x42b0b6228e21b0d1!8m2!3d41.1508604!4d-8.6060612!16s%2Fg%2F11b70039pn?entry=ttu&g_ep=EgoyMDI1MTIwOS4wIKXMDSoKLDEwMDc5MjA3MUgBUAM%3D" target="_blank" rel="noopener noreferrer">
-                  <strong>Taberna Do Dutour</strong>
-                </a>
-                - I couldn’t find a website for this restaurant, but the experience was outstanding. 
-                The hosts were welcoming, the francesinha was excellent, and multiple courses for two people were extremely affordable. 
-              </p>
-              <p>
-                Address: R. da Firmeza 489, 4000-453 Porto, Portugal
-              </p>
-
-              <p>
-                <a href="http://www.chefantoniovieira.com/uvabycalem/en" target="_blank" rel="noopener noreferrer">
-                  <strong>Uva by Cálem</strong>
-                </a>
-                - The menu is diverse and has quality wines.  
-                You can expect typical Portuguese flavors here.  
-                But the real reason to drink or dine here is the privileged riverside location, with the Douro river and many boats as a backdrop.
-              </p>
-
-              <p>
-                <a href="https://www.google.com/maps/place/Restaurante+Praia+da+Luz/@41.1534731,-8.6797385,18.85z/data=!4m15!1m8!3m7!1s0xd246f9de6fcae75:0x71d3fcf42962eed!2sRestaurante+Praia+da+Luz!8m2!3d41.1534726!4d-8.6792773!10e9!16s%2Fg%2F1tfffgnp!3m5!1s0xd246f9de6fcae75:0x71d3fcf42962eed!8m2!3d41.1534726!4d-8.6792773!16s%2Fg%2F1tfffgnp?entry=ttu&g_ep=EgoyMDI1MTIwOS4wIKXMDSoKLDEwMDc5MjA3MUgBUAM%3D" target="_blank" rel="noopener noreferrer">
-                  <strong>Restaurante Praia da Luz</strong>
-                </a>
-                - This restaurant is on the pricier side, largely because you’re paying for the beachfront setting and the sunset views. 
-                If you go, make a reservation or time your visit for sunset, and try to sit on the upper outdoor deck. 
-                Sitting outside on the upper deck at sunset is the main reason to go. 
-                To turn it into an evening, walk there along the Foz promenade, stopping for drinks or small bites at a few places along the way.
-              </p>
-              
-              <div class="photo-row photo-row--3">
-              <div class="img-wrap" style="--img-scale:0.7;">
-                <img
-                  src="/images/travel/porto/23.jpg"
-                  alt="Francesinha, Porto’s iconic sandwich"
-                />
-                <div class="caption">Francesinha, Porto’s iconic and heavy sandwich.</div>
-              </div>
-              <div class="img-wrap" style="--img-scale:0.7;">
-                <img
-                  src="/images/travel/porto/24.jpg"
-                  alt="Wine grapes before harvest"
-                />
-                <div class="caption">Wine grapes before harvest.</div>
-              </div>
-              <div class="img-wrap" style="--img-scale:0.7;">
-                <img
-                  src="/images/travel/porto/25.jpg"
-                  alt="Wife with white port"
-                />
-                <div class="caption">Wife with white port.</div>
-              </div>
-            </div>
-            
-
-            <div class="section">
-              <h2>Stay &amp; City Texture</h2>
-              <p>
-                I stayed in an Airbnb in Old Town Porto. 
-                The location offered excellent access to restaurants and major sites, but at a premium price. 
-                Central Porto has strong demand and relatively limited residential housing, which makes well-located rentals more competitive and expensive than expected.
-              </p>
-
-              <p>
-                Quieter or more affordable lodging west toward Foz do Douro is a viable alternative if paired with rideshares. 
-                That tradeoff sacrifices some walkability to major attractions but can offer better value, more space, access to the beach, and a calmer atmosphere, especially for longer stays.
-              </p>
-
-              <p>
-                Porto feels layered and lived-in, a collage of historic granite, narrow cobbled streets, steep hills, and contrasting old-meets-new architecture. 
-                The city possesses centuries of architectural styles alongside crumbling stone and abandoned buildings. Porto seems to thrive on architectural contradictions. 
-                Few examples capture this better than its famous McDonald’s, housed in a beautifully restored 1930s Art Deco building protected by UNESCO. 
-                Often cited as the most beautiful McDonald’s in the world, you have a large modern McDonald’s in a space that features crystal chandeliers and intricate stained glass.
-              </p>
-
-              <p>
-                You don’t need a guidebook to notice the juxtapositions. 
-                Just walk, look around, and let the jarring mashups reveal themselves.
-              </p>
-
-              <!-- 19 & 20 – old town / Ribeira -->
-              <div class="photo-row photo-row--2">
-                <div class="img-wrap" style="--img-scale:0.5;">
-                  <img
-                    src="/images/travel/porto/26.jpg"
-                    alt="Old town Porto city hall"
-                  />
-                  <div class="caption">Porto city hall in the old town district.</div>
-                </div>
-                <div class="img-wrap" style="--img-scale:0.5;">
-                  <img
-                    src="/images/travel/porto/27.jpg"
-                    alt="Ribeira waterfront in Porto"
-                  />
-                  <div class="caption">Ribeira waterfront with colorful facades.</div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section class="section">
-            <h2>Practical Notes &amp; Sunset</h2>
-
-            <ul class="note-list">
-              <li>Hills are steep; footwear and some base fitness matter.</li>
-              <li>Douro tours and port wine are the standout experiences.</li>
-              <li>Check out the Crystal Palace gardens and Stock Palace.</li>  
-              <li>Churches are numerous and ornate, often with entry fees.</li>
-              <li>Avoid obvious tourist-trap dining but try the port wines and francesinha.</li>
-              <li>Porto performs well across wine, architecture, scenery, and pricing.</li>
-            </ul>
-
-            <!-- sunset -->
-            <div class="photo-block">
-              <div class="img-wrap" style="--img-scale:0.8;">
-                <img
-                  src="/images/travel/porto/28.jpg"
-                  alt="Sunset over Porto"
-                />
-                <div class="caption">Sunset over Porto to close out the trip.</div>
-              </div>
-            </div>
-          </section>
-        </div>
-      </main>
+<MainLayout2
+  title={SITE_TITLE}
+  description={SITE_DESCRIPTION}
+  activeNav="travel"
+  pageTitle="Porto, Portugal"
+  pageDescription="Personal travel notes and photos from a week in Porto, Portugal."
+>
+  <div class="breadcrumb">
+    <a href="/travel/">Travel</a> / Porto, Portugal
+  </div>
+
+  <p class="subtext">
+    A week in a historic, industrial port city with strong wine, sweeping river views, and an emerging tourism scene that still feels distinctly local.
+  </p>
+
+  <section class="hero-layout">
+    <div class="hero-image-wrap">
+      <div class="img-wrap" style="--img-scale:1.0;">
+        <img
+          class="hero-image"
+          src="/images/travel/porto/1.jpg"
+          alt="Overlooking the city of Porto and the Douro River"
+        />
+      </div>
     </div>
-  </body>
-</html>
+    <aside class="hero-meta">
+      <h2>Trip Snapshot</h2>
+      <div class="meta-grid">
+        <div>
+          <div class="meta-label">Visited</div>
+          <div class="meta-value">July, ~1 week</div>
+        </div>
+        <div>
+          <div class="meta-label">From</div>
+          <div class="meta-value">Amsterdam (AMS → OPO)</div>
+        </div>
+        <div>
+          <div class="meta-label">Region</div>
+          <div class="meta-value">Iberian Peninsula</div>
+        </div>
+        <div>
+          <div class="meta-label">Why Go</div>
+          <div class="meta-value">Wine, river, sunsets, value</div>
+        </div>
+      </div>
+    </aside>
+  </section>
+
+  <section class="section">
+    <h2>Overview</h2>
+    <p>
+      I visited Porto, Portugal in July for about a week. I flew from Amsterdam Schiphol and landed at Francisco Sá Carneiro Airport (OPO). Porto sits on the Iberian Peninsula and often flies under the radar relative to nearby destinations in Spain, southern Portugal, France, or Italy. I initially visited simply to add Portugal to my travel map, but I found a city offering strong tourist value: striking views, excellent port wine, historic buildings, scenic river cruises, and prices lower than many Western European hotspots.
+    </p>
+    <p>
+      Porto is Portugal’s second-largest city and the capital of the northern region, functioning as a long-standing industrial and commercial center. The city feels industrial and aging, but with a visible student population and a tourism sector that is clearly growing. Architecturally, it ranges from medieval to modern, spanning numerous styles. Much of Porto is built on high ground overlooking the northern bank of the Douro River estuary, and its historic center was designated a UNESCO World Heritage Site in 1996.
+    </p>
+    <p>
+      The overall vibe is welcoming and relaxed, with high English proficiency, affordable rideshares, and impressive sunsets over the Atlantic.
+    </p>
+
+    <div class="photo-row photo-row--2">
+      <div class="img-wrap" style="--img-scale:0.5;">
+        <img
+          src="/images/travel/porto/2.jpg"
+          alt="Castle in Porto flying the Portuguese flag"
+        />
+        <div class="caption">Castle in Porto flying the Portuguese flag.</div>
+      </div>
+      <div class="img-wrap" style="--img-scale:0.5;">
+        <img
+          src="/images/travel/porto/3.jpg"
+          alt="Cityscape of Porto"
+        />
+        <div class="caption">Overlooking Porto's cityscape.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Understand</h2>
+    <p>
+      Porto reflects an important maritime legacy. 
+      Its roots trace back to the Age of Discovery, when the city embodied grit, commerce, and shipbuilding rather than courtly prestige. 
+      That legacy still shows: Porto historically supplied fleets, merchants, and labor, earning a reputation as a working city shaped more by trade than nobility.
+    </p>
+    <p>
+      The culture felt warm, friendly, and Mediterranean-influenced despite the Atlantic location. 
+      Locals often describe the city as proud, resilient, and no-nonsense an identity reinforced by its history of resistance and its nickname, "Cidade Invicta" (the undefeated city). 
+      There is a palpable student energy, and street-performing university groups add character and movement to public spaces.
+    </p>
+    <p>
+      Languages encountered included Portuguese, Spanish, and English. 
+      English-speaking visitors should be able to navigate comfortably.
+    </p>
+    <p>
+      Weather in July was warm and sunny, roughly 21 to 26°C (70 to 80°F), with no rain and mostly clear skies. 
+      Despite the Atlantic influence, conditions were ideal for vineyard tours, sunsets, and river cruises. 
+      Summer feels like the optimal season to experience Porto at its most relaxed and visually striking.
+    </p>
+  </section>
+
+  <section class="section">
+    <h2>Gettting In &amp; Getting Around</h2>
+    <p>
+      I flew into Francisco Sá Carneiro Airport (OPO). 
+      It was smaller than expected but easy to navigate. 
+      Arrival was smooth for an experienced traveler, with no sense of congestion despite the airport’s growing role as Portugal’s secondary international hub. 
+      Located roughly 15 km from the city center, it handles a high volume of passengers relative to Porto’s size, driven by increasing tourist demand and the region’s economic importance. 
+      I took an Uber from the airport; rideshares in Porto were significantly cheaper than in many Western European cities, making airport transfers straightforward and cost-effective. 
+      The Metro line E connects the airport to the city center.
+    </p>
+    <p>
+      I relied mainly on walking and Uber around tourist areas. 
+      Navigation apps make walking straightforward, but the hills are not trivial. 
+      Much of Porto is built into steep, uneven terrain overlooking the Douro River, making it physically demanding to explore on foot but visually rewarding. 
+      Even if you are relatively fit, expect some effort. 
+      Mobility-limited travelers should factor in the gradients and prioritize transit options.
+    </p>
+    <p>
+      Driving would be difficult and frustrating in central Porto, especially in tourist-heavy neighborhoods with narrow streets and irregular layouts, so I avoided renting a car altogether. 
+      Walking works well for short distances despite the elevation, and rideshare filled the gaps efficiently and affordably.
+    </p>
+    <p>
+      Public transit options exist, including trams and a modern light-rail system operated by Porto Metro, but I used them sparingly. 
+      The metro is efficient for longer point-to-point trips, though it does not serve every tourist area equally, and announcements are primarily in Portuguese.
+    </p>  
+
+    <p>
+      Overall, a combination of walking and rideshare was the most convenient way to get around, balancing flexibility with the city’s challenging terrain.
+    </p>
+    <p>
+      Depending on your trip itinerary and interests, the Porto Card may be worthwile.  
+      <a href="https://visitporto.travel/en-GB/porto-card" target="_blank" rel="noopener noreferrer">
+        Porto.CARD
+      </a>
+      is Porto’s official city pass, providing free access to selected museums and public transport as well as discounts on certain attractions, services, monuments, and tours for 1-4 days.
+    </p>
+
+    <div class="photo-row photo-row--3">
+      <div class="img-wrap" style="--img-scale:0.7;">
+        <img
+          src="/images/travel/porto/4.jpg"
+          alt="Crowded streets in central Porto"
+        />
+        <div class="caption">Crowded streets in central Porto.</div>
+      </div>
+      <div class="img-wrap" style="--img-scale:0.7;">
+        <img
+          src="/images/travel/porto/5.jpg"
+          alt="Steep stairs in Porto"
+        />
+        <div class="caption">Steep stairs showing how vertical the city can be.</div>
+      </div>
+      <div class="img-wrap" style="--img-scale:0.7;">
+        <img
+          src="/images/travel/porto/6.jpg"
+          alt="Busy pedestrian areas with shops and cafes"
+        />
+        <div class="caption">Busy pedestrian areas with shops and cafes.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>See &amp; Do</h2>
+
+    <p>
+      <a href="https://ambiente.cm-porto.pt/parques-e-jardins/jardins-do-palacio-de-cristal" target="_blank" rel="noopener noreferrer">
+        <strong>Jardins do Palácio de Cristal</strong>
+      </a>
+      - A large public garden and park in Porto, known for its beautifully landscaped grounds and sweeping panoramic views over the Douro River. 
+      One of the city’s most popular green spaces.
+      I only spent about an hour here during a longer walk and immediately wished I had planned more time. 
+      The gardens were stunning, the views of Porto’s bridges were spectacular, the peacocks were endlessly entertaining, and the fact that it was all free made it even better. 
+      If I were to redo the trip, I would grab lunch from a nearby café or market and have a picnic here. 
+      This felt like a true must-see.
+    </p>
+
+    <div class="photo-row photo-row--3">
+      <div class="img-wrap" style="--img-scale:0.56;">
+        <img
+          src="/images/travel/porto/7.jpg"
+          alt="Terrace in the gardens overlooking the Douro"
+        />
+        <div class="caption">Terrace in the gardens overlooking the Douro.</div>
+      </div>
+      <div class="img-wrap" style="--img-scale:1.0;">
+        <img
+          src="/images/travel/porto/8.jpg"
+          alt="Flowers in bloom inside the gardens"
+        />
+        <div class="caption">Flowers in bloom inside the gardens.</div>
+      </div>
+      <div class="img-wrap" style="--img-scale:0.56;">
+        <img
+          src="/images/travel/porto/9.jpg"
+          alt="Peacock wandering through the grounds"
+        />
+        <div class="caption">Peacock wandering through the grounds.</div>
+      </div>
+    </div>
+
+    <p>
+      <a href="https://www.diocese-porto.pt/pt/catedral-do-porto/" target="_blank" rel="noopener noreferrer">
+        <strong>Sé do Porto (Porto Cathedral)</strong>
+      </a>
+      - One of Porto’s oldest and most significant monuments, with construction beginning in the 12th century. 
+      Located on a hilltop overlooking the old city and the Douro River, it features a striking Gothic cloister adorned with traditional blue-and-white azulejo tiles.
+      Porto is filled with churches, many of which charge an entry fee, and after a while they can start to blend together. 
+      If you only choose one, this should be it. 
+      Sé do Porto offers not just ornate relics, but also tiled cloisters, multiple levels to explore, a pavilion, and an open square outside with excellent city views. 
+      Many churches are worth visiting, but this one stood out the most.
+    </p>
+    <div class="photo-row photo-row--2">
+      <div class="img-wrap" style="--img-scale:0.5;">
+        <img
+          src="/images/travel/porto/10.jpg"
+          alt="Blue-and-White azulejo tiles"
+        />
+        <div class="caption">Blue-and-White azulejo tiles.</div>
+      </div>
+      <div class="img-wrap" style="--img-scale:0.50;">
+        <img
+          src="/images/travel/porto/11.jpg"
+          alt="Altar area in the cathedral"
+        />
+        <div class="caption">Altar area in the cathedral.</div>
+      </div>
+    </div>
+
+    <p>
+      <a href="https://mercadobolhao.pt/en/" target="_blank" rel="noopener noreferrer">
+        <strong>Mercado do Bolhão</strong>
+      </a>
+      - Porto’s most famous traditional market, opened in 1914. 
+      Known for fresh produce, fish, meat, flowers, and a wide variety of traditional Portuguese foods.
+      The vendors reminded me of a Mediterranean take on Reading Terminal Market—fruit, fish, meat, smoothies, candy, baked goods, and more packed into a lively space. 
+      It is a great place to wander and pick up breakfast, lunch, or a midday snack. 
+      Just be aware that there are very few places to sit or even stand and eat within the market.
+    </p>
+    <div class="photo-row photo-row--2">
+      <div class="img-wrap" style="--img-scale:0.5;">
+        <img
+          src="/images/travel/porto/12.jpg"
+          alt="Entrance to the market square"
+        />
+        <div class="caption">Entrance to the market square</div>
+      </div>
+      <div class="img-wrap" style="--img-scale:0.50;">
+        <img
+          src="/images/travel/porto/13.jpg"
+          alt="Fresh fruit and produce"
+        />
+        <div class="caption">Fresh fruit and produce.</div>
+      </div>
+    </div>
+
+    <p>
+      <a href="https://www.serralves.pt/" target="_blank" rel="noopener noreferrer">
+        <strong>Serralves Museum Gardens</strong>
+      </a>
+      - Established in 1989 as a non-profit cultural foundation, Serralves combines a contemporary art museum, expansive landscaped gardens, and the historic Casa de Serralves.
+      This was easily the strangest stop of the trip, mostly because I didn’t quite know what to expect. 
+      I was a bit surprised by the entry fee (higher than anticipated), though not enough to stop me from going in. 
+      Inside, you move between beautiful gardens, modern art installations, and even a small farm or ranch. 
+      It can be jarring at times, like encountering giant modern sculptures in front of an otherwise serene pool. 
+      It is also a bit of a journey outside Porto proper. 
+      I took an Uber there and walked back along the coast through Foz, which was long but nice. 
+      Worth visiting if you have extra time, but not a must-see.
+    </p>
+
+    <div class="photo-row photo-row--2">
+      <div class="img-wrap" style="--img-scale:0.5;">
+        <img
+          src="/images/travel/porto/14.jpg"
+          alt="Pink House and monument"
+        />
+        <div class="caption">Pink House and monument.</div>
+      </div>
+      <div class="img-wrap" style="--img-scale:0.5;">
+        <img
+          src="/images/travel/porto/15.jpg"
+          alt="Flower and bee from the Museum gardens"
+        />
+        <div class="caption">Flower and bee from the Museum gardens.</div>
+      </div>
+    </div>
+
+    <p>
+      <a href="https://palaciodabolsa.com/en/intro/" target="_blank" rel="noopener noreferrer">
+        <strong>Palácio da Bolsa (Stock Exchange Palace)</strong>
+      </a>
+      - A 19th-century building in Porto’s historic center, originally constructed to house the city’s Commercial Association. 
+      It served as Porto’s stock exchange and commercial court and is renowned for its lavish interiors, especially the Arab Room inspired by Moorish design. 
+      Still used today for official ceremonies, conferences, and cultural events.
+      This was one of my favorite visits. 
+      The palace is stunning, rich with history, and I was genuinely disappointed when the guided tour ended. 
+      I wanted more time to wander the halls, learn about the building's evolving role through time, and better understand the events that took place here. 
+      Porto’s seafaring, mercantile, and industrial history all seem to converge in this building. 
+      Tours are scheduled in various languages at various times, so make sure to book in advance.
+      This is absolutely a must-see.
+    </p>
+
+    <div class="photo-row photo-row--2">
+      <div class="img-wrap" style="--img-scale:1.0;">
+        <img
+          src="/images/travel/porto/16.jpg"
+          alt="Stairs inside the Porto stock palace"
+        />
+        <div class="caption">Staircase inside Palácio da Bolsa.</div>
+      </div>
+      <div class="img-wrap" style="--img-scale:0.57;">
+        <img
+          src="/images/travel/porto/17.jpg"
+          alt="Golden room in the Porto stock palace"
+        />
+        <div class="caption">The golden room of the Stock Palace.</div>
+      </div>
+    </div>
+
+    <p>
+      <a href="https://en.wikipedia.org/wiki/Foz_do_Douro" target="_blank" rel="noopener noreferrer">
+        <strong>Foz do Douro</strong>
+      </a>
+      - A coastal district where the Douro River meets the Atlantic Ocean. 
+      Known for its beaches, seaside promenades, cafés, restaurants, and bars. 
+      One of Porto’s most scenic areas, especially at sunset and during dramatic ocean swells.
+      While it isn’t a single site or monument you would typically see pinned on a map, it is an area well worth exploring. 
+      I recommend setting aside an afternoon to walk from Porto’s historic center out to the Atlantic along this route. 
+      I made the walk, picked up drinks and appetizers at a few of the restaurants along the way, and ended the evening with a dinner at one of the beach bars to watch the spectacular sunset (see bottom of page).
+    </p>
+    <div class="photo-row photo-row--2">
+      <div class="img-wrap" style="--img-scale:1.0;">
+        <img
+          src="/images/travel/porto/18.jpg"
+          alt="Atlantic coast along the Foz"
+        />
+        <div class="caption">Atlantic coast along the Foz.</div>
+      </div>
+      <div class="img-wrap" style="--img-scale:0.57;">
+        <img
+          src="/images/travel/porto/19.jpg"
+          alt="Foz do Douro walkway"
+        />
+        <div class="caption">Foz do Douro walkway</div>
+      </div>
+    </div>
+
+    <p>
+      <a href="https://www.getyourguide.com/porto-l151/from-porto-2-wine-regions-farm-to-table-lunch-boat-t672568/" target="_blank" rel="noopener noreferrer">
+        <strong>Douro Wine Country Tour</strong>
+      </a>
+      - One of the world’s oldest demarcated wine regions and a major wine-producing area in northern Portugal. 
+      Tours typically include visits to traditional wine estates, tastings (including Port wine), and scenic views of terraced vineyards along the Douro River.
+      This was a long day, about eight hours, but easily the highlight of the trip. 
+      The tour was led by a young Porto local trying to establish himself in the tourism industry and he did a phenomenal job.  
+      He delivered the whole tour in English and kept the long driving stretches informative and engaging. 
+      We traveled far upstream into the mountains and made three stops. 
+      The first was a smaller, modern winery focused on organic and efficient production, where we sampled several wines. 
+      The second stop involved boarding boats in a small town and cruising past vineyards while enjoying wine onboard. 
+      The final stop was at a large, traditional winery, where we were treated to dinner and an impressive selection of wines, including an excellent vintage Port. 
+      This was the best experience of the trip.
+    </p>
+
+    <div class="photo-row photo-row--2">
+      <div class="img-wrap" style="--img-scale:1.0;">
+        <img
+          src="/images/travel/porto/20.jpg"
+          alt="Winery in the uplands of the Douro Valley"
+        />
+        <div class="caption">Winery in the uplands of the Douro Valley.</div>
+      </div>
+      <div class="img-wrap" style="--img-scale:0.57;">
+        <img
+          src="/images/travel/porto/21.jpg"
+          alt="Rows of grapes at a Douro Valley winery"
+        />
+        <div class="caption">Rows of grapes running down the Douro hillside .</div>
+      </div>
+    </div>
+
+    <p>
+      <a href="https://www.viator.com/en-AU/tours/Porto/Private-Cruise-on-the-Douro-River-with-Tapas-and-Port-Wine/d26879-356132P3" target="_blank" rel="noopener noreferrer">
+        <strong>Douro River Cruise</strong>
+      </a>
+      - Short, scenic boat cruises within Porto that focus on the city rather than the upriver wine valley. 
+      These relaxed trips highlight the Ribeira waterfront, wine cellars of Vila Nova de Gaia, historic landmarks along the riverbanks, and Porto’s iconic bridges.
+      There are many operators offering similar routes. 
+      My wife and I opted for a private boat, which meant a modern motorboat instead of a traditional vessel, but also a private guide and a charcuterie board prepared by our hosts. 
+      The cruise lasted about an hour and was relaxed and enjoyable. 
+      Since it takes place on the river, the water is calm and seasickness isn’t a concern. 
+      Just be mindful of the pickup location, as some docks are farther from the main areas than others.
+    </p>
+    <div class="img-wrap" style="--img-scale:0.50;">
+      <img
+        src="/images/travel/porto/22.jpg"
+        alt="Porto riverfront with restaurants and boats"
+      />
+      <div class="caption">Riverside restaurants and boats.</div>
+    </div>
+  </section>
+
+  <section class="two-column section-wide">
+    <div class="section">
+      <h2>Food &amp; Drink</h2>
+      <p>
+        Meals in Porto are built around fresh, local ingredients and a strong connection to the Atlantic, with seafood, vegetables, fruits, and whole grains forming the backbone of the cuisine, alongside familiar staples like pork, rice, legumes, and potatoes. 
+        The city has quietly built a reputation as one of the best places to eat in Portugal.
+      </p>
+
+      <p>
+        Some of the most enjoyable meals are found in small, family-run restaurants in and around the Ribeira and throughout the old city, where locals eat daily. 
+        These places tend to be relaxed, welcoming, and focused on generous portions rather than presentation. 
+        Space is often tight, which sometimes means sharing tables, but that only adds to the atmosphere. 
+        Ordering the <i>prato do dia</i> (dish of the day) or simply following the waiter’s recommendation is usually the best way to experience a well-prepared, satisfying meal at a reasonable price.
+      </p>
+
+      <p>
+        Everyday food is just as important here. 
+        Porto is filled with bakeries and pastry shops that double as neighborhood cafés, serving inexpensive pastries, espresso, and simple sandwiches.
+      </p>
+
+      <p>
+        Try a francesinha, ideally somewhere locals actually eat rather than the main riverfront strip. 
+        The waterfront is scenic but comes with predictable markups. 
+        Port wine is exceptional in Porto, and much of it never leaves Europe. 
+        Serious wine enthusiasts are missing out if they skip Porto and the Douro Valley.
+      </p>
+
+      <p>
+        When I travel, I usually rely on Google Maps to scout restaurants, checking menus and reviews ahead of time. 
+        Other times, I decide on the spot, choosing a place simply because the location feels right, the room looks inviting, or the menu catches my eye. 
+        Food preferences are deeply subjective, but if you’d like a few recommendations:
+      </p>
+
+      <p>
+        <a href="https://mercadobolhao.pt/en/" target="_blank" rel="noopener noreferrer">
+          <strong>Mercado do Bolhão</strong>
+        </a>
+        - Mentioned above as Porto’s most famous traditional market.
+      </p>
+
+      <p>
+        <a href="https://www.google.com/maps/place/Taberna+do+Doutor/@41.1508604,-8.6067049,19z/data=!3m1!4b1!4m6!3m5!1s0xd2464fa966862bd:0x42b0b6228e21b0d1!8m2!3d41.1508604!4d-8.6060612!16s%2Fg%2F11b70039pn?entry=ttu&g_ep=EgoyMDI1MTIwOS4wIKXMDSoKLDEwMDc5MjA3MUgBUAM%3D" target="_blank" rel="noopener noreferrer">
+          <strong>Taberna Do Dutour</strong>
+        </a>
+        - I couldn’t find a website for this restaurant, but the experience was outstanding. 
+        The hosts were welcoming, the francesinha was excellent, and multiple courses for two people were extremely affordable. 
+      </p>
+      <p>
+        Address: R. da Firmeza 489, 4000-453 Porto, Portugal
+      </p>
+
+      <p>
+        <a href="http://www.chefantoniovieira.com/uvabycalem/en" target="_blank" rel="noopener noreferrer">
+          <strong>Uva by Cálem</strong>
+        </a>
+        - The menu is diverse and has quality wines.  
+        You can expect typical Portuguese flavors here.  
+        But the real reason to drink or dine here is the privileged riverside location, with the Douro river and many boats as a backdrop.
+      </p>
+
+      <p>
+        <a href="https://www.google.com/maps/place/Restaurante+Praia+da+Luz/@41.1534731,-8.6797385,18.85z/data=!4m15!1m8!3m7!1s0xd246f9de6fcae75:0x71d3fcf42962eed!2sRestaurante+Praia+da+Luz!8m2!3d41.1534726!4d-8.6792773!10e9!16s%2Fg%2F1tfffgnp!3m5!1s0xd246f9de6fcae75:0x71d3fcf42962eed!8m2!3d41.1534726!4d-8.6792773!16s%2Fg%2F1tfffgnp?entry=ttu&g_ep=EgoyMDI1MTIwOS4wIKXMDSoKLDEwMDc5MjA3MUgBUAM%3D" target="_blank" rel="noopener noreferrer">
+          <strong>Restaurante Praia da Luz</strong>
+        </a>
+        - This restaurant is on the pricier side, largely because you’re paying for the beachfront setting and the sunset views. 
+        If you go, make a reservation or time your visit for sunset, and try to sit on the upper outdoor deck. 
+        Sitting outside on the upper deck at sunset is the main reason to go. 
+        To turn it into an evening, walk there along the Foz promenade, stopping for drinks or small bites at a few places along the way.
+      </p>
+      
+      <div class="photo-row photo-row--3">
+        <div class="img-wrap" style="--img-scale:0.7;">
+          <img
+            src="/images/travel/porto/23.jpg"
+            alt="Francesinha, Porto’s iconic sandwich"
+          />
+          <div class="caption">Francesinha, Porto’s iconic and heavy sandwich.</div>
+        </div>
+        <div class="img-wrap" style="--img-scale:0.7;">
+          <img
+            src="/images/travel/porto/24.jpg"
+            alt="Wine grapes before harvest"
+          />
+          <div class="caption">Wine grapes before harvest.</div>
+        </div>
+        <div class="img-wrap" style="--img-scale:0.7;">
+          <img
+            src="/images/travel/porto/25.jpg"
+            alt="Wife with white port"
+          />
+          <div class="caption">Wife with white port.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Stay &amp; City Texture</h2>
+      <p>
+        I stayed in an Airbnb in Old Town Porto. 
+        The location offered excellent access to restaurants and major sites, but at a premium price. 
+        Central Porto has strong demand and relatively limited residential housing, which makes well-located rentals more competitive and expensive than expected.
+      </p>
+
+      <p>
+        Quieter or more affordable lodging west toward Foz do Douro is a viable alternative if paired with rideshares. 
+        That tradeoff sacrifices some walkability to major attractions but can offer better value, more space, access to the beach, and a calmer atmosphere, especially for longer stays.
+      </p>
+
+      <p>
+        Porto feels layered and lived-in, a collage of historic granite, narrow cobbled streets, steep hills, and contrasting old-meets-new architecture. 
+        The city possesses centuries of architectural styles alongside crumbling stone and abandoned buildings. Porto seems to thrive on architectural contradictions. 
+        Few examples capture this better than its famous McDonald’s, housed in a beautifully restored 1930s Art Deco building protected by UNESCO. 
+        Often cited as the most beautiful McDonald’s in the world, you have a large modern McDonald’s in a space that features crystal chandeliers and intricate stained glass.
+      </p>
+
+      <p>
+        You don’t need a guidebook to notice the juxtapositions. 
+        Just walk, look around, and let the jarring mashups reveal themselves.
+      </p>
+
+      <div class="photo-row photo-row--2">
+        <div class="img-wrap" style="--img-scale:0.5;">
+          <img
+            src="/images/travel/porto/26.jpg"
+            alt="Old town Porto city hall"
+          />
+          <div class="caption">Porto city hall in the old town district.</div>
+        </div>
+        <div class="img-wrap" style="--img-scale:0.5;">
+          <img
+            src="/images/travel/porto/27.jpg"
+            alt="Ribeira waterfront in Porto"
+          />
+          <div class="caption">Ribeira waterfront with colorful facades.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Practical Notes &amp; Sunset</h2>
+
+    <ul class="note-list">
+      <li>Hills are steep; footwear and some base fitness matter.</li>
+      <li>Douro tours and port wine are the standout experiences.</li>
+      <li>Check out the Crystal Palace gardens and Stock Palace.</li>  
+      <li>Churches are numerous and ornate, often with entry fees.</li>
+      <li>Avoid obvious tourist-trap dining but try the port wines and francesinha.</li>
+      <li>Porto performs well across wine, architecture, scenery, and pricing.</li>
+    </ul>
+
+    <div class="photo-block">
+      <div class="img-wrap" style="--img-scale:0.8;">
+        <img
+          src="/images/travel/porto/28.jpg"
+          alt="Sunset over Porto"
+        />
+        <div class="caption">Sunset over Porto to close out the trip.</div>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    .breadcrumb {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+
+    .breadcrumb a {
+      color: var(--muted);
+    }
+
+    .breadcrumb a:hover {
+      color: var(--accent);
+    }
+
+    .subtext {
+      color: var(--text-soft);
+      margin: 4px 0 18px;
+      font-size: 1.03rem;
+    }
+
+    .hero-layout {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: 1fr;
+      margin-top: 12px;
+      margin-bottom: 26px;
+    }
+
+    @media (min-width: 900px) {
+      .hero-layout {
+        grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+        align-items: start;
+      }
+    }
+
+    .hero-image-wrap {
+      border-radius: 16px;
+      overflow: hidden;
+      border: none;
+      background: none;
+      padding: 0;
+    }
+
+    .hero-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      aspect-ratio: 16 / 9;
+    }
+
+    .hero-meta {
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      padding: 14px 16px;
+      color: var(--text);
+    }
+
+    .hero-meta h2 {
+      margin: 0 0 10px;
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: 1.2rem;
+      color: var(--title);
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      font-size: 0.9rem;
+    }
+
+    .meta-label {
+      color: var(--muted);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .meta-value {
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .section {
+      margin-bottom: 24px;
+    }
+
+    .section-wide {
+      margin-bottom: 24px;
+    }
+
+    .section h2 {
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: 1.5rem;
+      margin: 0 0 8px;
+      color: var(--title);
+    }
+
+    .section p {
+      margin: 0 0 10px;
+      color: var(--text);
+    }
+
+    .section ul {
+      margin: 6px 0 10px 1.2rem;
+      padding: 0;
+      color: var(--text);
+    }
+
+    .section li {
+      margin-bottom: 4px;
+    }
+
+    .two-column {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    .note-list {
+      list-style: disc;
+      margin: 6px 0 0 1.2rem;
+      padding: 0;
+    }
+
+    .callout {
+      border-radius: 12px;
+      border: 1px dashed var(--border);
+      padding: 10px 12px;
+      background: var(--surface-muted);
+      font-size: 0.92rem;
+      color: var(--text);
+    }
+
+    .img-wrap {
+      --img-scale: 0.8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .img-wrap img {
+      width: calc(100% * var(--img-scale));
+      max-width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--surface-muted);
+      object-fit: cover;
+    }
+
+    .img-wrap .caption {
+      width: calc(100% * var(--img-scale));
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 6px;
+      text-align: left;
+      overflow-wrap: anywhere;
+    }
+
+    .photo-block {
+      margin: 22px 0;
+    }
+
+    .caption {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 6px;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .photo-block .img-wrap .caption {
+      width: calc(100% * var(--img-scale)) !important;
+      max-width: none !important;
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+      text-align: left;
+      overflow-wrap: anywhere;
+    }
+
+    .photo-row {
+      display: grid;
+      gap: 16px;
+      margin: 26px 0;
+    }
+
+    .photo-row--2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .photo-row--3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    @media (max-width: 959px) {
+      .photo-row {
+        grid-template-columns: 1fr !important;
+      }
+    }
+  </style>
+</MainLayout2>

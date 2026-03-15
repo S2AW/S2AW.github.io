@@ -1,9 +1,5 @@
 ---
-/*
-  src/pages/experience.astro
-  Experience — single header per company with stacked engagement sections (like LinkedIn)
-  Now all entries use CompanyWithSegments
-*/
+import MainLayout2 from "../../layouts/mainlayout2.astro";
 
 const SITE_TITLE = "Stephen — Experience";
 const SITE_DESCRIPTION = "Professional roles, responsibilities, and impact.";
@@ -11,13 +7,12 @@ const SITE_DESCRIPTION = "Professional roles, responsibilities, and impact.";
 type Link = { label: string; href: string };
 
 type Segment = {
-  intro?: string;       // short paragraph above bullets
-  bullets?: string[];   // bullet points for this engagement
-  links?: Link[];       // chips under this engagement
+  intro?: string;
+  bullets?: string[];
+  links?: Link[];
 };
 
 type CompanyWithSegments = {
-  // Shared header row
   years: string;
   title: string;
   company: string;
@@ -25,13 +20,33 @@ type CompanyWithSegments = {
   location?: string;
   logo?: string;
   logoAlt?: string;
-
-  // Engagement blocks
   segments: Segment[];
 };
 
 const EXPERIENCE: CompanyWithSegments[] = [
-  // Deloitte — one header, two engagement sections
+  {
+    years: "Mar 2026 – Present",
+    title: "Master Data Analyst",
+    company: "YETI®",
+    companyUrl: "https://nl.yeti.com/",
+    location: "Amsterdam, Netherlands",
+    logo: "/images/experience/logos/yeti.jpeg",
+    logoAlt: "YETI logo",
+    segments: [
+      {
+        intro:
+          "Contracted by YETI EMEA to strengthen product and pricing master data management across ERP and B2B systems, ensuring data integrity, governance, and scalable processes to support seasonal launches and business growth:",
+        bullets: [
+          "Managed creation, validation, and maintenance of product and pricing master data across ERP and B2B platforms, consolidating information from multiple sources to ensure accuracy and consistency across systems;",
+          "Partnered with Merchandising and Supply Planning teams to support new season launches, maintain accurate assortment files, and ensure product data was correctly transmitted to warehouses and ordering platforms;",
+          "Implemented data governance and quality assurance processes, including regular data cleaning and exception-based reporting to identify and resolve inconsistencies;",
+          "Supported SAP Master Data Management initiatives by contributing to system design, testing, and process improvements related to product data workflows; and",
+          "Automated and streamlined data preparation and reporting processes using advanced Excel and BI tools to improve operational efficiency and data reliability across the organization."
+        ],
+        links: [{ label: "YETI - EMEA", href: "https://nl.yeti.com/" }]
+      }
+    ]
+  },
   {
     years: "Mar 2022 – Jul 2024",
     title: "Strategy & Analytics Consultant",
@@ -43,14 +58,14 @@ const EXPERIENCE: CompanyWithSegments[] = [
     segments: [
       {
         intro:
-          "Contracted by the Department of State’s Bureau of Energy Resources to support its Minerals Security Partnership in Greenland as an Economic Geologist:",
+          "Contracted by the Department of State’s Bureau of Energy Resources to support its Energy and Mineral Governance Program in Greenland as an Economic Geologist:",
         bullets: [
           "Organized coordination between Deloitte, Department of State, Government of Greenland, and geologists to determine field targets, secure aircraft and equipment, staff teams, and ensure safety before field programs;",
           "Joined field teams in Greenland to assist with sample collection, site inspections, and sample processing as well as provide logistical support from base arranging critical supply deliveries; and",
           "Produced detailed field program reports, documenting activities, conditions, data collected, and findings for policymakers."
         ],
         links: [
-          { label: "Minerals Security Partnership", href: "https://www.state.gov/minerals-security-partnership" }
+          { label: "Energy and Mineral Governance Program", href: "https://www.state.gov/wp-content/uploads/2022/08/FBS_ENR_Public.pdf" }
         ]
       },
       {
@@ -62,13 +77,14 @@ const EXPERIENCE: CompanyWithSegments[] = [
           "Built Tableau and Power BI dashboards that allowed senior leadership to monitor budgets and identify financial risks across NPFC operations."
         ],
         links: [
-          { label: "National Pollution Funds Center", href: "https://www.uscg.mil/Mariners/National-Pollution-Funds-Center/" }
+          {
+            label: "National Pollution Funds Center",
+            href: "https://www.uscg.mil/Mariners/National-Pollution-Funds-Center/"
+          }
         ]
       }
     ]
   },
-
-  // IMG-Crown — converted to segmented format (single segment)
   {
     years: "Feb 2019 – Feb 2022",
     title: "Data Analyst",
@@ -94,8 +110,6 @@ const EXPERIENCE: CompanyWithSegments[] = [
       }
     ]
   },
-
-  // Columbine Logging — converted to segmented format (single segment)
   {
     years: "Aug 2018 – Jan 2019",
     title: "Wellsite Geologist",
@@ -115,7 +129,10 @@ const EXPERIENCE: CompanyWithSegments[] = [
           "Delivered final well logs including drilling data, gas readings, and rock descriptions, to well managers."
         ],
         links: [
-          { label: "Powder River Basin overview", href: "https://www.usgs.gov/centers/energy-resources-program/science/powder-river-basin" }
+          {
+            label: "Powder River Basin overview",
+            href: "https://www.usgs.gov/centers/energy-resources-program/science/powder-river-basin"
+          }
         ]
       }
     ]
@@ -123,260 +140,276 @@ const EXPERIENCE: CompanyWithSegments[] = [
 ];
 ---
 
-<html lang="en" data-theme="light">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{SITE_TITLE}</title>
-    <meta name="description" content={SITE_DESCRIPTION} />
-    <meta name="theme-color" content="#ffffff" />
-    <link rel="icon" href="/favicon.ico" />
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet" />
+<MainLayout2
+  title={SITE_TITLE}
+  description={SITE_DESCRIPTION}
+  activeNav="experience"
+  pageTitle="Experience"
+  pageDescription="Data, Strategy & Analytics"
+>
+  <section class="timeline">
+    <div class="exp">
+      {EXPERIENCE.map((entry) => (
+        <article class="exp-item">
+          <div class="dot" aria-hidden="true"></div>
 
-    <style>
-      :root {
-        --bg:#fff; --sidebar:#f3f5f8; --text:#0f141b; --muted:#6b7280; --accent:#0a67ff;
-        --border:#e5e7eb; --maxw:1400px; --sidebar-w:270px; --card-border:#111827;
-      }
-      * { box-sizing: border-box; }
-      html, body {
-        margin: 0; padding: 0; background: var(--bg); color: var(--text);
-        font: 16px/1.6 Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-      }
-      a { color: var(--accent); text-decoration: none; }
-      a:hover { text-decoration: underline; }
+          <div class="card exp-card">
+            {entry.logo ? (
+              entry.companyUrl ? (
+                <a
+                  class="logo-wrap"
+                  href={entry.companyUrl}
+                  target="_blank"
+                  rel="noopener"
+                  aria-label={`${entry.company} website`}
+                >
+                  <img
+                    class="logo"
+                    src={entry.logo}
+                    alt={entry.logoAlt ?? `${entry.company} logo`}
+                    width="88"
+                    height="88"
+                    loading="lazy"
+                  />
+                </a>
+              ) : (
+                <div class="logo-wrap">
+                  <img
+                    class="logo"
+                    src={entry.logo}
+                    alt={entry.logoAlt ?? `${entry.company} logo`}
+                    width="88"
+                    height="88"
+                    loading="lazy"
+                  />
+                </div>
+              )
+            ) : (
+              <div class="logo-wrap" aria-hidden="true"></div>
+            )}
 
-      .site { display: grid; grid-template-columns: 1fr; min-height: 100dvh; }
-      @media (min-width: 800px) { .site { grid-template-columns: var(--sidebar-w) 1fr; } }
+            <div class="text-col">
+              <div class="years">{entry.years}</div>
+              <div class="title">{entry.title}</div>
 
-      /* Sidebar */
-      aside { background: var(--sidebar); border-right: 1px solid var(--border); }
-      .aside-inner {
-        position: sticky; top: 0; height: 100dvh;
-        display: grid; grid-template-rows: auto 1fr auto;
-        padding: 28px 22px; gap: 18px; max-width: var(--sidebar-w); margin: 0 auto;
-      }
-      .avatar { width: 160px; height: 160px; border-radius: 999px; overflow: hidden; border: 2px solid #fff;
-        box-shadow: 0 6px 22px rgba(0,0,0,.06); margin: 0 auto; }
-      .avatar img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 35%; }
-      .who { text-align: center; margin-top: 8px; }
-      .name { font: 700 1.35rem/1.2 "Playfair Display", Georgia, serif; color: #111827; }
-      .role { font-size: .9rem; color: var(--accent); }
-      .loc { color: var(--muted); font-size: .85rem; }
+              <div class="company">
+                {entry.companyUrl ? (
+                  <a href={entry.companyUrl} target="_blank" rel="noopener">
+                    {entry.company}
+                  </a>
+                ) : (
+                  entry.company
+                )}
+                {entry.location ? ` — ` : ""}
+                <span class="meta">{entry.location}</span>
+              </div>
 
-      .sidenav { list-style: none; margin: 18px 0; padding: 0; display: grid; gap: 10px; }
-      .sidenav a { color: #0f141b; font-weight: 600; }
-      .sidenav a.active, .sidenav a:hover { color: var(--accent); }
+              <div class="segments">
+                {entry.segments.map((s) => (
+                  <div class="segment">
+                    {s.intro && <p class="segment-intro">{s.intro}</p>}
 
-      .copyright { color: var(--muted); font-size: .8rem; }
-
-      /* Main */
-      main { display: grid; align-content: start; }
-      .content { max-width: var(--maxw); margin-left: 0; margin-right: auto; padding: clamp(12px, 2vw, 28px); padding-left: clamp(12px, 2vw, 28px); }
-
-      .headline {
-        font-family: "Playfair Display", Georgia, serif;
-        font-size: clamp(2.2rem, 5vw, 3.2rem);
-        line-height: 1.08; margin: 8px 0 0; color: #111827;
-      }
-      .subtext{
-        color:#374151;
-        margin:8px 0 22px;
-        font-size:1.05rem;
-
-        /* desktop: keep it on one line */
-        max-width:none;
-        white-space:nowrap;
-        overflow:hidden;
-        text-overflow:ellipsis;
-      }
-      @media (max-width: 900px){
-        .subtext{
-          white-space:normal;
-          text-overflow:clip;
-          overflow:visible;
-          max-width:65ch;
-          text-wrap:pretty;
-        }
-      }
-
-      /* Timeline */
-      .timeline { position: relative; margin-top: 8px; }
-      .timeline::before {
-        content: ""; position: absolute; left: 12px; top: 0; bottom: 0;
-        width: 2px; background: var(--border);
-      }
-
-      .exp { display: grid; gap: 14px; }
-      .exp-item { position: relative; padding-left: 44px; }
-      .dot {
-        position: absolute; left: 4px; top: 28px; width: 16px; height: 16px; border-radius: 999px;
-        background: #fff; border: 2px solid var(--accent); outline: 2px solid #fff;
-      }
-
-      .card {
-        border: 2px solid var(--card-border); border-radius: 14px; background: #fff;
-        padding: 14px 16px;
-        display: grid;
-        grid-template-columns: auto 1fr;   /* logo | text */
-        gap: 14px;
-        align-items: start;
-      }
-
-      /* Left logo */
-      .logo-wrap {
-        width: 88px; height: 88px;
-        border-radius: 14px;
-        overflow: hidden;
-        border: 1px solid var(--border);
-        background: #fff;
-        display: grid; place-items: center;
-        flex-shrink: 0;
-        box-shadow: 0 4px 14px rgba(0,0,0,.05);
-      }
-      .logo { width: 88%; height: 88%; object-fit: contain; image-rendering: -webkit-optimize-contrast; }
-
-      /* Text column */
-      .text-col { display: grid; gap: 4px; }
-      .years { font-weight: 700; letter-spacing: .02em; }
-      .title { font-weight: 700; color: #111827; }
-      .company { color: #111827; }
-      .company a { text-decoration: none; }
-      .company a:hover { text-decoration: underline; }
-      .meta { color: #6b7280; font-size: .95rem; }
-      .notes { margin: 6px 0 0; padding-left: 18px; color: #374151; }
-      .links { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 8px; }
-      .chip {
-        display: inline-block; border: 1px solid var(--border); padding: 6px 10px; border-radius: 999px;
-        font-size: .9rem; background: #fff; text-decoration: none;
-      }
-      .chip:hover { background: #f9fafb; text-decoration: none; }
-
-      /* Segmented engagement blocks */
-      .segments { margin-top: 10px; display: grid; gap: 0; }
-      .segment {
-        padding: 12px 0;
-        border-top: 1px solid var(--border);
-      }
-      .segment:first-child { border-top: 0; padding-top: 6px; }
-      .segment-intro { margin: 0 0 6px; color: #111827; }
-      .segment .notes { margin-top: 4px; }
-      .segment .links { margin-top: 8px; }
-
-      /* Mobile tweaks */
-      @media (max-width: 959px) {
-        aside { border-right: none; border-bottom: 1px solid var(--border); }
-        .aside-inner { position: static; height: auto; padding: 16px; }
-      }
-      @media (max-width: 640px) {
-        .logo-wrap { width: 72px; height: 72px; }
-      }
-    </style>
-  </head>
-
-  <body>
-    <div class="site">
-      <!-- Sidebar -->
-      <aside>
-        <div class="aside-inner">
-          <div>
-            <div class="avatar"><img src="/images/home/portrait.jpg" alt="Stephen portrait" /></div>
-            <div class="who">
-              <div class="name">Stephen</div>
-              <a class="role" href="/">Strategist &amp; Aspiring Autodidact</a>
-              <div class="loc">Netherlands / United States</div>
-            </div>
-          </div>
-
-          <nav>
-            <ul class="sidenav">
-              <li><a href="/">Home</a></li>
-              <li><a href="/about/">About</a></li>
-              <li><a href="/education/">Education</a></li>
-              <li><a class="active" href="/experience/">Experience</a></li>
-              <li><a href="/projects/">Projects</a></li>
-              <li><a href="/photography/">Photography</a></li>
-              <li><a href="/travel/">Travel</a></li>
-              <li><a href="/thoughts/">Thoughts</a></li>
-              <li><a href="mailto:stephen@example.com">Contact</a></li>
-            </ul>
-          </nav>
-
-          <div class="copyright">© {new Date().getFullYear()} Stephen · <a href="https://github.com/S2AW" target="_blank" rel="noopener">GitHub</a></div>
-        </div>
-      </aside>
-
-      <!-- Main -->
-      <main>
-        <div class="content">
-          <h1 class="headline">Experience</h1>
-          <p class="subtext">Data, Strategy & Analytics</p>
-
-          <section class="timeline">
-            <div class="exp">
-              {EXPERIENCE.map((entry, idx) => (
-                <article class="exp-item">
-                  <div class="dot" aria-hidden="true"></div>
-
-                  <div class="card">
-                    {/* Logo — clickable if companyUrl exists */}
-                    {entry.logo ? (
-                      entry.companyUrl ? (
-                        <a class="logo-wrap" href={entry.companyUrl} target="_blank" rel="noopener" aria-label={`${entry.company} website`}>
-                          <img class="logo" src={entry.logo} alt={entry.logoAlt ?? `${entry.company} logo`} width="88" height="88" loading="lazy" />
-                        </a>
-                      ) : (
-                        <div class="logo-wrap">
-                          <img class="logo" src={entry.logo} alt={entry.logoAlt ?? `${entry.company} logo`} width="88" height="88" loading="lazy" />
-                        </div>
-                      )
-                    ) : (
-                      <div class="logo-wrap" aria-hidden="true"></div>
+                    {s.bullets && s.bullets.length > 0 && (
+                      <ul class="notes">
+                        {s.bullets.map((b) => <li>{b}</li>)}
+                      </ul>
                     )}
 
-                    <div class="text-col">
-                      <div class="years">{entry.years}</div>
-                      <div class="title">{entry.title}</div>
-                      <div class="company">
-                        {entry.companyUrl ? (
-                          <a href={entry.companyUrl} target="_blank" rel="noopener">{entry.company}</a>
-                        ) : (
-                          entry.company
-                        )}
-                        {entry.location ? ` — ` : ""}
-                        <span class="meta">{entry.location}</span>
-                      </div>
-
-                      {/* Engagement sections */}
-                      <div class="segments">
-                        {entry.segments.map((s, i) => (
-                          <div class="segment">
-                            {s.intro && <p class="segment-intro">{s.intro}</p>}
-
-                            {s.bullets && s.bullets.length > 0 && (
-                              <ul class="notes">
-                                {s.bullets.map((b) => <li>{b}</li>)}
-                              </ul>
-                            )}
-
-                            {s.links && s.links.length > 0 && (
-                              <div class="links">
-                                {s.links.map((l) => (
-                                  <a class="chip" href={l.href} target="_blank" rel="noopener">{l.label}</a>
-                                ))}
-                              </div>
-                            )}
-                          </div>
+                    {s.links && s.links.length > 0 && (
+                      <div class="links">
+                        {s.links.map((l) => (
+                          <a class="chip" href={l.href} target="_blank" rel="noopener">
+                            {l.label}
+                          </a>
                         ))}
                       </div>
-                    </div>
+                    )}
                   </div>
-                </article>
-              ))}
+                ))}
+              </div>
             </div>
-          </section>
-        </div>
-      </main>
+          </div>
+        </article>
+      ))}
     </div>
-  </body>
-</html>
+  </section>
+
+  <style>
+.timeline {
+  position: relative;
+  margin-top: 8px;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 12px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+
+.exp {
+  display: grid;
+  gap: 14px;
+}
+
+.exp-item {
+  position: relative;
+  padding-left: 44px;
+}
+
+.dot {
+  position: absolute;
+  left: 4px;
+  top: 28px;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 2px solid var(--accent);
+  outline: 2px solid var(--surface);
+}
+
+.exp-card {
+  padding: 14px 16px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: start;
+  background: var(--surface);
+  border: 2px solid var(--card-border);
+  border-radius: var(--radius-md);
+}
+
+.logo-wrap {
+  width: 88px;
+  height: 88px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-sm);
+}
+
+.logo {
+  width: 88%;
+  height: 88%;
+  object-fit: contain;
+  image-rendering: -webkit-optimize-contrast;
+}
+
+.text-col {
+  display: grid;
+  gap: 4px;
+  color: var(--text);
+}
+
+.years {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--text);
+}
+
+.title {
+  font-weight: 700;
+  color: var(--title);
+}
+
+.company {
+  color: var(--title);
+}
+
+.company a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.company a:hover {
+  text-decoration: underline;
+}
+
+.meta {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.notes {
+  margin: 6px 0 0;
+  padding-left: 18px;
+  color: var(--text-soft);
+}
+
+.notes li {
+  color: inherit;
+}
+
+.links {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* FIX: make links blue again */
+.chip {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.chip:hover {
+  text-decoration: underline;
+}
+
+.segments {
+  margin-top: 10px;
+  display: grid;
+  gap: 0;
+}
+
+.segment {
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+}
+
+.segment:first-child {
+  border-top: 0;
+  padding-top: 6px;
+}
+
+.segment-intro {
+  margin: 0 0 6px;
+  color: var(--text);
+}
+
+.segment .notes {
+  margin-top: 4px;
+}
+
+.segment .links {
+  margin-top: 8px;
+}
+
+@media (max-width: 900px) {
+  .subtext {
+    white-space: normal;
+    text-overflow: clip;
+    overflow: visible;
+    max-width: 65ch;
+    text-wrap: pretty;
+  }
+}
+
+@media (max-width: 640px) {
+  .logo-wrap {
+    width: 72px;
+    height: 72px;
+  }
+}
+</style>
+</MainLayout2>
